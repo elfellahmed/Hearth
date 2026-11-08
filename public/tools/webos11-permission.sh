@@ -11,7 +11,7 @@
 # it adds the group if it is missing and asks the Luna hub to reload its permissions.
 #
 # Install, once, over SSH on the TV (the script is inside the Hearth app; it copies itself to the boot folder):
-#   sh /media/developer/apps/usr/palm/applications/tld.my.customlauncher/tools/webos11-permission.sh
+#   sh /media/developer/apps/usr/palm/applications/com.elfellahmed.cleanhearth/tools/webos11-permission.sh
 # Or from a computer:
 #   scp -O webos11-permission.sh root@TV_IP:/var/lib/webosbrew/init.d/40-hearth-permission
 #   ssh root@TV_IP 'chmod 755 /var/lib/webosbrew/init.d/40-hearth-permission; sh /var/lib/webosbrew/init.d/40-hearth-permission'
@@ -21,7 +21,7 @@
 # added after an existing entry, so an empty list can never turn into broken JSON.
 
 GROUP=org.webosbrew.hbchannel.service.group
-F=/var/luna-service2-dev/client-permissions.d/tld.my.customlauncher.app.json
+F=/var/luna-service2-dev/client-permissions.d/com.elfellahmed.cleanhearth.app.json
 HOOK=/var/lib/webosbrew/init.d/40-hearth-permission
 
 case "$0" in

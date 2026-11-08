@@ -31,8 +31,8 @@ const steps = k.installSteps('#!/bin/sh\necho hi\n');
 eq(steps[steps.length - 1].command.endsWith("keepready.sh' apply on"), true, 'the last step turns it on');
 eq(k.installSteps('x', true).pop().command.endsWith('apply on relaunch'), true, 'the relaunch choice goes to the script');
 eq(/apply off/.test(k.REMOVE_COMMAND), true, 'removing asks the script to apply off');
-eq(k.keepMessage(false, true), 'Keep Hearth ready: off', 'off message');
-eq(/^Keep Hearth ready: on\./.test(k.keepMessage(true, true)), true, 'on message');
+eq(k.keepMessage(false, true), 'Keep CleanHearth ready: off', 'off message');
+eq(/^Keep CleanHearth ready: on\./.test(k.keepMessage(true, true)), true, 'on message');
 eq(/Nothing was changed/.test(k.keepMessage(true, false, 'x')), true, 'failure message');
 eq(/RAM/.test(k.KEEP_WARNING) && /experimental/i.test(k.KEEP_WARNING), true, 'the warning names RAM and experimental');
 if (fail) { console.log(`${fail} failed`); process.exit(1); }

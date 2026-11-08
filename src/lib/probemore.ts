@@ -64,8 +64,8 @@ export function summariseKeys (out: string): {text: string; keys: number; hook: 
 	return {text: parts.join(' | ') || 'no key events seen', keys, hook};
 }
 
-export const APPS_JSON = 'https://raw.githubusercontent.com/rudra-avatar/Hearth/main/repo/apps.json';
-const IPK_URL = /^https:\/\/github\.com\/rudra-avatar\/Hearth\/releases\/download\/[A-Za-z0-9._\/-]+$/;
+export const APPS_JSON = 'https://raw.githubusercontent.com/elfellahmed/Hearth/main/repo/apps.json';
+const IPK_URL = /^https:\/\/github\.com\/elfellahmed\/Hearth\/releases\/download\/[A-Za-z0-9._\/-]+$/;
 export const FETCH = (url: string, out: string): string => `(wget -q -O ${out} "${url}" 2>/tmp/hearth-probe.err || curl -s -L -o ${out} "${url}" 2>>/tmp/hearth-probe.err)`;
 
 /** The newest release's address, size and SHA-256 from the Homebrew list, or why not. */

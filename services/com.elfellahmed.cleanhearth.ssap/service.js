@@ -9,7 +9,7 @@ var net = require('net');
 var tls = require('tls');
 var crypto = require('crypto');
 
-var service = new Service('tld.my.customlauncher.ssap');
+var service = new Service('com.elfellahmed.cleanhearth.ssap');
 var HOST = '127.0.0.1';
 var ALLOWED = ['ssap://com.webos.applicationManager/listLaunchPoints', 'ssap://tv/getExternalInputList'];
 
@@ -17,7 +17,7 @@ var ALLOWED = ['ssap://com.webos.applicationManager/listLaunchPoints', 'ssap://t
 var TRIES = [
 	{port: 3000, tls: false, origin: 'file://'},
 	{port: 3000, tls: false, origin: ''},
-	{port: 3000, tls: false, origin: 'file://tld.my.customlauncher'},
+	{port: 3000, tls: false, origin: 'file://com.elfellahmed.cleanhearth'},
 	{port: 3000, tls: false, origin: 'http://localhost'},
 	{port: 3001, tls: true, origin: 'file://'},
 	{port: 3001, tls: true, origin: ''}
@@ -253,7 +253,7 @@ service.register('evdev', function (message) {
 			if (wantLaunch && !launched && value === 1 && HOME_CODES.indexOf(code) >= 0) {
 				launched = {code: code, pending: true};
 				try {
-					service.call('luna://com.webos.applicationManager/launch', {id: 'tld.my.customlauncher'}, function (m) {
+					service.call('luna://com.webos.applicationManager/launch', {id: 'com.elfellahmed.cleanhearth'}, function (m) {
 						var pl = (m && m.payload) || {};
 						launched = {code: code, ok: pl.returnValue === true, ms: Date.now() - t0 - at, error: pl.errorText ? String(pl.errorText).slice(0, 80) : undefined};
 					});

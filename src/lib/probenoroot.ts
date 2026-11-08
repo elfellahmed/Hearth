@@ -1,5 +1,5 @@
 // Probe tests 53-55 (Tests tab only, 2.0.3 V probe): what Hearth's own helper service can do WITHOUT root, for a no-root Home
-// key helper. The service (services/tld.my.customlauncher.ssap, method `evdev`) only reads /dev/input and, in test 55, asks the
+// key helper. The service (services/com.elfellahmed.cleanhearth.ssap, method `evdev`) only reads /dev/input and, in test 55, asks the
 // TV to open Hearth; it writes nothing, grabs no device and ends itself after a listen. Works with or without root.
 
 import {classifyFailure} from './failure';

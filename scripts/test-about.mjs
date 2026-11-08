@@ -16,10 +16,10 @@ const pkg = JSON.parse(readFileSync(dir + '../package.json', 'utf8')).version;
 const info = JSON.parse(readFileSync(dir + '../public/appinfo.json', 'utf8')).version;
 eq([a.HEARTH_VERSION, a.HEARTH_VERSION], [pkg, info], 'the version in the app matches package.json and appinfo.json');
 
-eq(a.aboutText({webos: '11.2.0', firmware: '43.21.79', homebrew: '0.7.3'}, 'yes', null, '9.9.9'), 'Hearth 9.9.9  ·  webOS 11.2.0  ·  firmware 43.21.79  ·  Homebrew 0.7.3  ·  Root: yes', 'full line when rooted');
-eq(a.aboutText({webos: '11.2.0', firmware: '43.21.79'}, 'no', 'denied', '9.9.9'), 'Hearth 9.9.9  ·  webOS 11.2.0  ·  firmware 43.21.79  ·  Root: not available (the TV refused the command)', 'root refused: says so, no Homebrew version');
-eq(a.aboutText({}, 'no', 'no-service', '1'), 'Hearth 1  ·  Root: not available (Homebrew Channel service not found)', 'no service: says so');
-eq(a.aboutText({}, 'unknown', null, '1'), 'Hearth 1  ·  Root: checking…', 'before the check ends');
+eq(a.aboutText({webos: '11.2.0', firmware: '43.21.79', homebrew: '0.7.3'}, 'yes', null, '9.9.9'), 'CleanHearth 9.9.9  ·  webOS 11.2.0  ·  firmware 43.21.79  ·  Homebrew 0.7.3  ·  Root: yes', 'full line when rooted');
+eq(a.aboutText({webos: '11.2.0', firmware: '43.21.79'}, 'no', 'denied', '9.9.9'), 'CleanHearth 9.9.9  ·  webOS 11.2.0  ·  firmware 43.21.79  ·  Root: not available (the TV refused the command)', 'root refused: says so, no Homebrew version');
+eq(a.aboutText({}, 'no', 'no-service', '1'), 'CleanHearth 1  ·  Root: not available (Homebrew Channel service not found)', 'no service: says so');
+eq(a.aboutText({}, 'unknown', null, '1'), 'CleanHearth 1  ·  Root: checking…', 'before the check ends');
 
 const apps = [{id: 'a'}, {id: 'b'}, {id: 'c'}];
 eq(a.extendOrder(apps, ['b']), ['b', 'a', 'c'], 'apps not in the saved order go after it, in list order');
@@ -47,7 +47,7 @@ a.clearLog();
 for (let i = 0; i < 60; i++) a.log('event ' + i + '\nwith newline', new Date(2026, 0, 1, 9, 5, 7));
 eq([a.logLines().length, a.logLines()[0].slice(0, 17), a.logLines()[39].indexOf('\n')], [40, '09:05:07 event 20', -1], 'the log keeps the last 40 events, one line each');
 a.log('x'.repeat(300)); eq(a.logLines().pop().length <= 110, true, 'long events are cut');
-const pages = a.debugPages({about: 'Hearth 1', rootDetail: '', appList: {source: 'catalog', count: 7, ago: 'just now'}, weather: 'off', config: a.DEFAULT_CONFIG, events: a.logLines(), userAgent: 'Chrome/132.0.1'});
+const pages = a.debugPages({about: 'CleanHearth 1', rootDetail: '', appList: {source: 'catalog', count: 7, ago: 'just now'}, weather: 'off', config: a.DEFAULT_CONFIG, events: a.logLines(), userAgent: 'Chrome/132.0.1'});
 eq(pages.length, 2, 'two debug pages');
 eq(pages[0].lines.length <= 20 && pages[0].lines.every((l) => l.length <= 118), true, 'page 1 fits one screen (20 lines of 118 characters)');
 eq(pages[1].lines.every((l) => l.length <= 76) && pages[1].right.lines.length <= a.DENSE_ROWS && pages[1].right.lines.every((l) => l.length <= 60), true, 'page 2: this TV on the left, events on the right, within the column widths');
@@ -61,8 +61,8 @@ eq(a.reportText(pages).indexOf('Boot trace') < 0, true, 'S3c: no boot trace sect
 const st = a.parseStats('---\nFilesystem 1K-blocks Used Available Use% Mounted on\n/dev/root 2097152 1048576 1048576 50% /\n/dev/root 2097152 1048576 1048576 50% /var\n/dev/sda1 8388608 4194304 4194304 50% /media/internal\n');
 eq([st.disks.length, st.disks[1].mount, st.disks[1].freeMB], [2, '/media/internal', 4096], 'storage figures are read, the same disk once');
 eq(a.parseStats('garbage'), {disks: []}, 'unreadable output gives no figures');
-const p2 = a.debugPages({about: 'Hearth 1', rootDetail: '', appList: null, weather: 'off', config: a.DEFAULT_CONFIG, events: [], userAgent: '', stats: st});
-eq(p2[0].title.indexOf('share the logs') > 0 && p2[1].lines.some((l) => l.indexOf('Storage /media/internal:') === 0) && !p2[1].lines.some((l) => l.indexOf('Hearth 1') === 0), true, 'instructions first, figures on the TV page, no repeat of the watermark line');
+const p2 = a.debugPages({about: 'CleanHearth 1', rootDetail: '', appList: null, weather: 'off', config: a.DEFAULT_CONFIG, events: [], userAgent: '', stats: st});
+eq(p2[0].title.indexOf('share the logs') > 0 && p2[1].lines.some((l) => l.indexOf('Storage /media/internal:') === 0) && !p2[1].lines.some((l) => l.indexOf('CleanHearth 1') === 0), true, 'instructions first, figures on the TV page, no repeat of the watermark line');
 const app = {id: 'x.app', title: 'Real', iconUrl: 'icons/x.png', color: '#123456'};
 eq(a.appTile(app), {key: 'x.app', label: 'Real', imageUrl: 'icons/x.png', color: '#123456'}, 'an app without edits is drawn as before');
 eq(a.appTile(app, {'x.app': {label: 'Mine'}}).label + a.appTile(app, {'x.app': {label: 'Mine'}}).imageUrl, 'Mineicons/x.png', 'a new name keeps the app artwork');

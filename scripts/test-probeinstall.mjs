@@ -13,11 +13,11 @@ let fail = 0;
 const eq = (a, b, m) => { const ok = JSON.stringify(a) === JSON.stringify(b); if (!ok) fail++; console.log(ok ? 'ok  ' : 'FAIL', m, ok ? '' : `(${JSON.stringify(a)} != ${JSON.stringify(b)})`); };
 
 const SHA = 'a'.repeat(64);
-const list = (extra = {}) => JSON.stringify({packages: [{manifest: Object.assign({ipkUrl: 'https://github.com/rudra-avatar/Hearth/releases/download/v2.0.2/tld.my.customlauncher_2.0.2_all.ipk', ipkHash: {sha256: SHA}}, extra)}]});
-eq(h.installTarget(list()), {url: 'https://github.com/rudra-avatar/Hearth/releases/download/v2.0.2/tld.my.customlauncher_2.0.2_all.ipk', sha: SHA, version: '2.0.2'}, 'target: version from the address');
+const list = (extra = {}) => JSON.stringify({packages: [{manifest: Object.assign({ipkUrl: 'https://github.com/elfellahmed/Hearth/releases/download/v2.0.2/com.elfellahmed.cleanhearth_2.0.2_all.ipk', ipkHash: {sha256: SHA}}, extra)}]});
+eq(h.installTarget(list()), {url: 'https://github.com/elfellahmed/Hearth/releases/download/v2.0.2/com.elfellahmed.cleanhearth_2.0.2_all.ipk', sha: SHA, version: '2.0.2'}, 'target: version from the address');
 eq(h.installTarget(list({version: '2.0.9'})).version, '2.0.9', 'target: manifest version wins');
 eq(typeof h.installTarget(list({ipkUrl: 'https://evil.example/x.ipk'})), 'string', 'target: foreign address refused');
-eq(typeof h.installTarget(list({ipkUrl: 'https://github.com/rudra-avatar/Hearth/releases/download/v2/x;rm -rf'})), 'string', 'target: shell characters refused');
+eq(typeof h.installTarget(list({ipkUrl: 'https://github.com/elfellahmed/Hearth/releases/download/v2/x;rm -rf'})), 'string', 'target: shell characters refused');
 eq(typeof h.installTarget('{'), 'string', 'target: bad json');
 let threw = false; try { h.installScript({url: 'https://github.com/x', sha: SHA, version: '2.0.2'}); } catch (e) { threw = true; }
 eq(threw, true, 'script: a bad target throws');
@@ -48,17 +48,17 @@ esac`;
 w('luna-send', lunaBody(false));
 writeFileSync(join(root, 'uptime'), '900.5 1\n');
 mkdirSync(join(root, 'app'));
-writeFileSync(join(root, 'app', 'appinfo.json'), '{"id": "tld.my.customlauncher", "version": "2.0.2"}');
-const target = {url: 'https://github.com/rudra-avatar/Hearth/releases/download/v2.0.2/tld.my.customlauncher_2.0.2_all.ipk', sha: SHA, version: '2.0.2'};
+writeFileSync(join(root, 'app', 'appinfo.json'), '{"id": "com.elfellahmed.cleanhearth", "version": "2.0.2"}');
+const target = {url: 'https://github.com/elfellahmed/Hearth/releases/download/v2.0.2/com.elfellahmed.cleanhearth_2.0.2_all.ipk', sha: SHA, version: '2.0.2'};
 const fake = (text) => text.split(h.INSTALL_LOG).join(join(root, 'log')).split(h.INSTALL_OUT).join(join(root, 'out')).split(h.INSTALL_PLACES[0]).join(join(root, 'first', 'x.ipk')).split(h.INSTALL_PLACES[1]).join(join(root, 'second', 'x.ipk')).split('/proc/uptime').join(join(root, 'uptime'))
-	.split('/media/developer/apps/usr/palm/applications/tld.my.customlauncher').join(join(root, 'app'));
+	.split('/media/developer/apps/usr/palm/applications/com.elfellahmed.cleanhearth').join(join(root, 'app'));
 writeFileSync(join(root, 'run.sh'), fake(h.installScript(target)));
 execSync(`PATH=${bin}:$PATH sh ${join(root, 'run.sh')}`, {stdio: 'pipe'});
 const q = h.parseInstallLog(readFileSync(join(root, 'log'), 'utf8'));
 eq([q.started, q.ended, q.stopped, q.version, q.tries.length, q.removed], [true, true, false, '2.0.2', 2, 'yes'], 'script: first place refused, second place installs, version read back, files removed (fake TV)');
 eq(q.problems.length >= 1, true, 'script: the refusal is logged');
 eq([existsSync(join(root, 'first', 'x.ipk')), existsSync(join(root, 'second', 'x.ipk')), existsSync(join(root, 'out'))], [false, false, false], 'script: no downloaded file is left');
-eq(/appInstallService\/dev\/install .*"id":"tld.my.customlauncher".*"subscribe":true/.test(readFileSync(join(root, 'lunaargs'), 'utf8')), true, 'script: the install call carries id, file and subscribe');
+eq(/appInstallService\/dev\/install .*"id":"com.elfellahmed.cleanhearth".*"subscribe":true/.test(readFileSync(join(root, 'lunaargs'), 'utf8')), true, 'script: the install call carries id, file and subscribe');
 
 // the first place works: only one try
 w('luna-send', lunaBody(true));

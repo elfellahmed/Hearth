@@ -13,9 +13,9 @@ eq(c.compareVersions('2.0.3', '2.0.3'), 0, 'equal versions');
 eq(c.compareVersions('2.0.3', 'x'), 0, 'not a version: 0');
 eq(c.compareVersions('2.0.3-beta', '2.0.2'), 0, 'a suffix is not a version');
 
-const good = readFileSync(new URL('../repo/updates.json', import.meta.url), 'utf8');
+const good = readFileSync(new URL('./fixtures/updates-sample.json', import.meta.url), 'utf8');   // CleanHearth: Hearth's own list kept as a sample; repo/updates.json starts empty
 const list = c.parseUpdates(good);
-eq(list && list.map((e) => e.version), ['2.1.5', '2.1.4', '2.1.3', '2.1.2', '2.1.1', '2.1.0', '2.0.2', '2.0.1', '2.0.0'], 'repo/updates.json reads: nine versions');
+eq(list && list.map((e) => e.version), ['2.1.5', '2.1.4', '2.1.3', '2.1.2', '2.1.1', '2.1.0', '2.0.2', '2.0.1', '2.0.0'], 'the sample list reads: nine versions');
 eq(list && list.map((e) => e.ipkUrl !== '' && e.sha256.length === 64 && e.size > 0), [true, true, true, true, true, true, false, false, false], '2.1.0 and later carry install facts (each can be chosen); older ones do not');
 eq(list && list.filter((e) => e.ipkUrl).every((e) => e.ipkUrl.indexOf('/v' + e.version + '/') > 0 && e.ipkUrl.indexOf('_' + e.version + '_all.ipk') > 0), true, 'every address names its own version');
 eq(list && list.every((e) => e.summary.length > 0 && e.summary.every((l) => l.length <= 160)), true, 'every entry has a short summary');
@@ -27,7 +27,7 @@ eq(c.parseUpdates('{"format":1,"versions":[]}'), [], 'an empty list is a list');
 eq(c.parseUpdates('\uFEFF{"format":1,"versions":[]}'), [], 'a byte-order mark is ignored');
 
 const sha = 'a'.repeat(64);
-const url = 'https://github.com/rudra-avatar/Hearth/releases/download/v9.9.9/x.ipk';
+const url = 'https://github.com/elfellahmed/Hearth/releases/download/v9.9.9/x.ipk';
 const mixed = c.parseUpdates(JSON.stringify({format: 1, versions: [
   {version: '9.9.9', summary: ['ok'], ipkUrl: url, sha256: sha, size: 100},
   {version: '9.9.9', summary: ['duplicate']},

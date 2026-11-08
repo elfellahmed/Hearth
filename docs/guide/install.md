@@ -18,7 +18,7 @@ Pick **one** way. If your TV is rooted, use way A: it is the easiest and later g
 webOS Dev Manager is a free helper that talks to the TV from a computer or an Android phone.
 
 1. Get it: the computer app from <https://github.com/webosbrew/dev-manager-desktop> (Releases page, for Windows, Mac and Linux), or on Android the app **webOS Dev Manager** from Google Play. There is no iPhone version that we know of.
-2. Download the newest `tld.my.customlauncher_<version>_all.ipk` from the **Releases** page of <https://github.com/rudra-avatar/Hearth>. On a phone it lands in *Downloads*.
+2. Download the newest `com.elfellahmed.cleanhearth_<version>_all.ipk` from the **Releases** page of <https://github.com/rudra-avatar/Hearth>. On a phone it lands in *Downloads*.
 3. Open Dev Manager, choose **Add device**, type the TV's **IP address** (the Developer Mode app shows it) and follow the prompts. **Dev Mode Status** and **Key Server** must be on.
 4. The TV now shows in the list. Open its **Apps** page, press **Install** and pick the file.
 5. Open **Hearth** from the TV's app list.

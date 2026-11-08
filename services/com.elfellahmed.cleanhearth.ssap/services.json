@@ -1,9 +1,9 @@
 {
-  "id": "tld.my.customlauncher.ssap",
+  "id": "com.elfellahmed.cleanhearth.ssap",
   "description": "Hearth SSAP helper",
   "services": [
     {
-      "name": "tld.my.customlauncher.ssap",
+      "name": "com.elfellahmed.cleanhearth.ssap",
       "description": "Hearth SSAP helper"
     }
   ]

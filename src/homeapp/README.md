@@ -4,7 +4,7 @@ Source of the "Set Hearth as the TV's Home app" setting (Settings → Options). 
 `src/lib/homeappcmd.ts`; this folder holds the start-up check that the launcher writes to the TV.
 
 **Nothing runs in the background, and nothing is replaced or mounted.** The Home button opens whichever app the TV's own
-system setting `general.defaultApps.home` names. This method writes Hearth's id (`tld.my.customlauncher`) there.
+system setting `general.defaultApps.home` names. This method writes Hearth's id (`com.elfellahmed.cleanhearth`) there.
 
 ## Why it exists
 

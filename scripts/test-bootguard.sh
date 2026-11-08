@@ -9,7 +9,7 @@ cat > "$T/send" <<'FAKE'
 #!/bin/sh
 D="$(dirname "$0")"; echo "$3" >> "$D/calls"
 case "$3" in
-  */getAllInputStatus) if [ -e "$D/down" ]; then echo '{"returnValue":false}'; elif [ -e "$D/listed" ]; then echo '{"returnValue":true,"devices":[{"appId":"tld.my.customlauncher"}]}'; else echo '{"returnValue":true,"devices":[]}'; fi ;;
+  */getAllInputStatus) if [ -e "$D/down" ]; then echo '{"returnValue":false}'; elif [ -e "$D/listed" ]; then echo '{"returnValue":true,"devices":[{"appId":"com.elfellahmed.cleanhearth"}]}'; else echo '{"returnValue":true,"devices":[]}'; fi ;;
   */deleteDevice) [ -e "$D/stubborn" ] || rm -f "$D/listed" ;;
   */getForegroundAppInfo) echo "{\"returnValue\":true,\"appId\":\"$(cat "$D/fg" 2>/dev/null)\"}" ;;
   */launch) echo "$4" > "$D/launched" ;;
@@ -34,11 +34,11 @@ check "and nothing is counted" "$(now)" "input=0 powerOn=0 tries=0 reverted=0 "
 reset; st 1 0 0 0; echo other > "$T/fg"
 check "boot 1 without Hearth: retry" "$(g check)" "retry"
 check "the count is 1" "$(now)" "input=1 powerOn=0 tries=1 reverted=0 "
-check "Hearth was started" "$(grep -c customlauncher "$T/launched")" "1"
+check "Hearth was started" "$(grep -c cleanhearth "$T/launched")" "1"
 check "the input was not touched" "$(grep -c deleteDevice "$T/calls")" "0"
 check "the log says retry" "$(grep -c 'retry' "$T/log")" "2"
 
-reset; st 1 0 1 0; echo tld.my.customlauncher > "$T/fg"
+reset; st 1 0 1 0; echo com.elfellahmed.cleanhearth > "$T/fg"
 check "boot 2: retry again" "$(g check)" "retry"
 check "Hearth already in front: not started twice" "$(there "$T/launched")" "no"
 
@@ -108,13 +108,13 @@ check "trace: says when it ends without Hearth" "$(grep -c 'Hearth not in front 
 check "trace: no memory figures" "$(grep -ci -E 'memfree|vmrss|memavail|free ram' "$T/dir/boot-trace.log")" "0"
 check "trace: the TV does not read the check's own output" "$(g check < /dev/null | head -n 1)" "retry"
 
-reset; st 1 0 0 0; echo tld.my.customlauncher > "$T/fg"
+reset; st 1 0 0 0; echo com.elfellahmed.cleanhearth > "$T/fg"
 g check >/dev/null
 check "trace: ends early when Hearth is in front twice" "$(grep -c ' round ' "$T/dir/boot-trace.log")" "2"
 check "trace: says so" "$(grep -c 'Hearth is in front: trace ends' "$T/dir/boot-trace.log")" "1"
 
 reset; st 1 0 0 0; echo other > "$T/fg"
-printf '%s\n' 'coverui lastinput hdmi1' 'unrelated line about nothing' 'webappmanager asked for tld.my.customlauncher' > "$T/bootd.log"
+printf '%s\n' 'coverui lastinput hdmi1' 'unrelated line about nothing' 'webappmanager asked for com.elfellahmed.cleanhearth' > "$T/bootd.log"
 TR=8 g check >/dev/null
 check "trace: bootd lines about the first app are copied" "$(grep -c 'bootd: ' "$T/dir/boot-trace.log")" "4"
 check "trace: unrelated bootd lines are not" "$(grep -c 'unrelated' "$T/dir/boot-trace.log")" "0"

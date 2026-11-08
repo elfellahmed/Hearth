@@ -82,7 +82,7 @@ const makeTv = () => {
 };
 const NEXT = 2, TAKEN = 1;
 let tv = makeTv();
-eq(tv.subscribed.params.configNames[0] + ' ' + tv.subscribed.params.subscribe, 'tld.my.customlauncher.remap true', 'the filter subscribes to its map');
+eq(tv.subscribed.params.configNames[0] + ' ' + tv.subscribed.params.subscribe, 'com.elfellahmed.cleanhearth.remap true', 'the filter subscribes to its map');
 eq(tv.key(WebOSKeys.Key_webOS_Netflix), NEXT, 'with no map every button goes on to the TV');
 tv.push({on: true, keys: {Key_webOS_Netflix: {t: 'app', id: 'com.example.plex'}, Key_webOS_Amazon: {t: 'mute'}, Key_webOS_Red: {t: 'none'}, '#4242': {t: 'app', id: 'com.example.hdmi'}}});
 eq(tv.key(WebOSKeys.Key_webOS_Netflix), TAKEN, 'a reassigned button is taken');
@@ -117,9 +117,9 @@ tv.push({on: true, keys: {Key_webOS_USP: {t: 'app', id: 'com.example.old'}}});
 eq(tv.key(WebOSKeys.Key_webOS_USP) + ' ' + tv.launched.join(), '1 com.example.old {}', 'a map saved under the USP name still works');
 tv = makeTv();
 tv.push({on: true, keys: {}, capture: 1});
-tv.fg = 'tld.my.customlauncher';
+tv.fg = 'com.elfellahmed.cleanhearth';
 tv.key(WebOSKeys.Key_webOS_USP);
-eq(tv.launched.join(), 'tld.my.customlauncher {"hearthRemapKey":"Key_webOS_RakutenTV"}', 'pressing the Movies key in "Press a button" reports the Rakuten TV button');
+eq(tv.launched.join(), 'com.elfellahmed.cleanhearth {"hearthRemapKey":"Key_webOS_RakutenTV"}', 'pressing the Movies key in "Press a button" reports the Rakuten TV button');
 
 // "Press a button"
 tv = makeTv();
@@ -128,18 +128,18 @@ tv.fg = 'com.example.other';
 // P61b: capture does not check the app in front (the property may not exist on every firmware); the wait lasts one minute and Hearth cancels it
 eq(tv.key(QtKeys.Key_Down), NEXT, 'the arrows still move around while waiting');
 eq(tv.key(WebOSKeys.Key_webOS_Amazon), TAKEN, 'the pressed button is taken');
-eq(tv.launched.join(), 'tld.my.customlauncher {"hearthRemapKey":"Key_webOS_Amazon"}', 'and Hearth is told which one');
+eq(tv.launched.join(), 'com.elfellahmed.cleanhearth {"hearthRemapKey":"Key_webOS_Amazon"}', 'and Hearth is told which one');
 eq(tv.key(WebOSKeys.Key_webOS_Amazon, false), TAKEN, 'its release is taken too');
 eq(tv.key(WebOSKeys.Key_webOS_Amazon), NEXT, 'one press only: then the button works as before');
 tv = makeTv();
 tv.push({on: true, keys: {}, capture: 1});
-tv.fg = 'tld.my.customlauncher';
+tv.fg = 'com.elfellahmed.cleanhearth';
 tv.key(777);
-eq(tv.launched.join(), 'tld.my.customlauncher {"hearthRemapKey":"#777"}', 'a button without a name is reported by number');
+eq(tv.launched.join(), 'com.elfellahmed.cleanhearth {"hearthRemapKey":"#777"}', 'a button without a name is reported by number');
 tv = makeTv();
 const realNow = Date.now;
 tv.push({on: true, keys: {}, capture: 1});
-tv.fg = 'tld.my.customlauncher';
+tv.fg = 'com.elfellahmed.cleanhearth';
 tv.ctx.Date = {now: () => realNow() + 61000};
 eq(tv.key(WebOSKeys.Key_webOS_Netflix), NEXT, 'capture gives up after a minute');
 tv.ctx.Date = Date;

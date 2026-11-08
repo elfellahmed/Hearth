@@ -31,7 +31,7 @@ eq(c.factsVerdict('home: appinfo=no type= main=\n').ok, false, 'no Home manifest
 
 // log summary
 const log = ['100.10 standin[7]: started as uid 0, arguments: {}, front: com.webos.app.home', '100.40 standin[7]: launcher shown (start, form 1) in 300 ms',
-	'100.50 standin[7]: registered with SAM (registerApp)', '120.00 standin[7]: event relaunch {"event":"relaunch"} | front before: tld.my.customlauncher',
+	'100.50 standin[7]: registered with SAM (registerApp)', '120.00 standin[7]: event relaunch {"event":"relaunch"} | front before: com.elfellahmed.cleanhearth',
 	'120.20 standin[7]: launcher shown (relaunch, form 1) in 180 ms', '120.30 standin[7]: front 2 s later: com.webos.app.home',
 	'130.00 standin[7]: preloaded by SAM, not opened (start)', '140.00 standin[7]: webapp-mgr refused (1): {"returnValue": false}'].join('\n');
 const s = c.summariseLog(log);
