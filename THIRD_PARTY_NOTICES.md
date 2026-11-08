@@ -13,6 +13,7 @@ is **not** covered by that licence.
 | [Preact](https://preactjs.com) | MIT, © Jason Miller | compiled into `assets/app.js`; licence text in [public/licenses/preact-MIT.txt](public/licenses/preact-MIT.txt) |
 | [core-js](https://github.com/zloirock/core-js) | MIT, © 2013-2025 Denis Pushkarev, © 2025-2026 CoreJS Company | polyfills put in front of `assets/app.legacy.js` (the bundle for webOS 3.x only); licence text in [public/licenses/core-js-MIT.txt](public/licenses/core-js-MIT.txt) |
 | [Inter](https://rsms.me/inter/) typeface | SIL Open Font License 1.1, © The Inter Project Authors | `src/assets/inter-latin-wght.woff2`; licence text in [public/licenses/Inter-OFL.txt](public/licenses/Inter-OFL.txt) |
+| [Manrope](https://github.com/sharanda/manrope) typeface (the Frame home screen) | SIL Open Font License 1.1, © The Manrope Project Authors | `src/assets/manrope-latin-wght.woff2` (taken from [CleanFrame](https://github.com/nthnclrk/CleanFrame)); licence text in [public/licenses/Manrope-OFL.txt](public/licenses/Manrope-OFL.txt) |
 | Nunito typeface | SIL Open Font License 1.1, © The Nunito Project Authors | `src/assets/nunito-latin-800.woff2`; licence text in [public/licenses/Nunito-OFL.txt](public/licenses/Nunito-OFL.txt) |
 | Poppins typeface | SIL Open Font License 1.1, © The Poppins Project Authors | `src/assets/poppins-latin-*.woff2`, `src/assets/hearth-poppins-*.woff`; licence text in [public/licenses/Poppins-OFL.txt](public/licenses/Poppins-OFL.txt) |
 | Noto Sans Arabic typeface | SIL Open Font License 1.1, © The Noto Project Authors | `src/assets/noto-sans-arabic-*.woff2`; licence text in [public/licenses/NotoSansArabic-OFL.txt](public/licenses/NotoSansArabic-OFL.txt) |
@@ -92,3 +93,7 @@ The folder `homehook` of the install holds two unmodified programs taken from th
 | `homehook/ezinject` | [ezinject](https://github.com/smx-smx/ezinject) by Stefano Moioli (smx-smx) | zlib-style, © 2021 Stefano Moioli (`licenses/ezinject-COPYING.txt`) | `d2def5b3f68a415cf5a4a747ab70115e70a82f721bafbcc0d9c5a7bd5c161160` |
 
 The source code of the GPL-3.0 library is at https://github.com/sundermann/inputhookpp and, with the changes made for Input Hook, at https://github.com/Simon34545/lginputhook (the same programs this install carries). Anyone may ask the Hearth maintainer for a copy as well. The original idea of the hook is by Informatic (the `inputhook` script).
+
+## CleanFrame (design)
+
+The Frame home screen (`src/screens/FrameHome.tsx`, `src/theme/frame.css`) follows the layout and interaction design of [CleanFrame](https://github.com/nthnclrk/CleanFrame) by Nathan Clark (MIT licence): a photo, a small clock, the List and Dock layouts and quiet corner controls. CleanFrame is a Samsung Tizen app; the code here is written for this launcher, not copied.

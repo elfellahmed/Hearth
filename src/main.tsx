@@ -6,6 +6,7 @@ import {applyBackground, startEarlyPhoto} from './lib/backgrounds';
 import {startEarlyStatic} from './lib/wallpaper';
 import {applyTokens, THEMES} from './theme/tokens';
 import './theme/global.css';
+import './theme/frame.css';
 import globalCss from './theme/global.css?raw';
 import {LEGACY, startLegacyVars} from './lib/cssvars';
 import {mark} from './lib/perfmarks';

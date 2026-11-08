@@ -131,6 +131,10 @@ export const isMonoStyle = (style: string): boolean => style !== 'original' && s
 /** P41f: bumped when this version's one-time reset of saved look settings must run again */
 export const DEFAULTS_VERSION = 1;
 
+/** The home screen's layout: 'dock' and 'list' are the Frame home screen, 'classic' is Hearth's own row. */
+export type HomeLayout = 'dock' | 'list' | 'classic';
+export const HOME_LAYOUTS: readonly HomeLayout[] = ['dock', 'list', 'classic'];
+
 export interface UserConfig {
 	/** P41f: the defaults version these settings were last reset to (missing = never; the look is reset once) */
 	defaultsV: number;
@@ -244,6 +248,8 @@ export interface UserConfig {
 	scrollSpeed: ScrollSpeed;
 	/** where the highlight lands when Hearth comes back to the front (Home): the first tile, or the app or input opened last (PR #20) */
 	homeFocus: HomeFocus;
+	/** the home screen: the Frame layouts (Dock or List, after CleanFrame) or Hearth's classic row */
+	homeLayout: HomeLayout;
 	/** show each app's name under its icon on the home row */
 	showLabels: boolean;
 	/** minimalist look: no borders around icons or on the selected one; the selected icon is simply larger */
@@ -381,6 +387,7 @@ export const DEFAULT_CONFIG: UserConfig = {
 	labelWeight: 400,
 	scrollSpeed: 'medium',
 	homeFocus: 'last',                // P41c
+	homeLayout: 'dock',
 	showLabels: true,
 	minimal: false,
 	showLgHome: false,                // P41c: hidden on a fresh install (saved settings keep theirs)
@@ -554,6 +561,7 @@ export function loadConfig (): UserConfig {
 			labelWeight: LABEL_WEIGHTS.indexOf(parsed.labelWeight as number) !== -1 ? (parsed.labelWeight as number) : 400,
 			homeFocus: parsed.homeFocus === 'first' ? 'first' : 'last',
 			scrollSpeed: SCROLL_SPEED_IDS.indexOf(parsed.scrollSpeed as ScrollSpeed) !== -1 ? (parsed.scrollSpeed as ScrollSpeed) : 'medium',
+			homeLayout: HOME_LAYOUTS.indexOf(parsed.homeLayout as HomeLayout) !== -1 ? (parsed.homeLayout as HomeLayout) : 'dock',
 			showLabels: parsed.showLabels !== false,
 			minimal: parsed.minimal === true,
 			showLgHome: parsed.showLgHome !== false,

@@ -61,6 +61,10 @@
  },
  {
   "file": "lib/prefs.ts",
+  "text": "Layout"
+ },
+ {
+  "file": "lib/prefs.ts",
   "text": "Icons"
  },
  {

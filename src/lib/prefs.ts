@@ -11,7 +11,7 @@ import {
 	DEFAULT_CLOCK, DEFAULT_CONFIG, DEFAULT_WALLPAPER, DEFAULT_WEATHER, INTERVAL_VALUES, RANGES, rangeValues, stepValue,
 	type ClockAlign, type ClockFormat, type ClockWeight, type RangeName, type UserConfig
 } from './storage';
-import {LABEL_WEIGHTS, LABEL_SIZES, isMonoStyle, effectiveIconStyle, hasLightTile, hasPrefsBackup} from './storage';
+import {LABEL_WEIGHTS, LABEL_SIZES, isMonoStyle, effectiveIconStyle, hasLightTile, hasPrefsBackup, HOME_LAYOUTS} from './storage';
 import {CLOCK_FONT_IDS, LABEL_FONT_IDS, fontLabel, type ClockFont} from './clockfont';
 import {activeSlug, activeTheme, savedIndex, userThemeList} from './themelist';
 import {SCROLL_SPEED_IDS, scrollSpeedText} from './scrollspeed';
@@ -230,6 +230,7 @@ export function resetLook (c: UserConfig): UserConfig {
 		labelSize: 100,
 		labelWeight: 400,
 		scrollSpeed: 'medium',
+		homeLayout: 'dock',
 		showLabels: true,
 		minimal: false,
 		rows: 1,
@@ -364,6 +365,8 @@ const BASE_PREFS: PrefDef[] = [
 		visible: (c) => isMonoStyle(effectiveIconStyle(c.iconStyle, c.theme))},
 	choice('rows', 'look',
 		[1, 2] as const, (c) => c.rows, (c, v) => ({...c, rows: v}), (v) => (v === 1 ? td('pref.row1') : td('pref.rows2'))),
+	choice('homeLayout', 'look',
+		HOME_LAYOUTS, (c) => c.homeLayout, (c, v) => ({...c, homeLayout: v}), (v) => td(`pref.homeLayout.${v}`)),
 	toggle('showLabels', 'look',
 		(c) => c.showLabels, (c, v) => ({...c, showLabels: v})),
 	choice('labelColor', 'look',
@@ -584,6 +587,7 @@ const BASE_PREFS: PrefDef[] = [
 /** Where every row lives, in order: tab, group ('' = no group, always shown), row ids. */
 const LAYOUT: [PrefTab, string, string[]][] = [
 	['look', '', ['restoreLook']],
+	['look', 'Layout', ['homeLayout']],
 	['look', 'Theme', ['theme', 'themeExport', 'themeSave', 'themeRemove']],
 	['look', 'Icons', ['iconScale', 'tileShape', 'iconStyle', 'iconLight', 'iconColor', 'iconGap', 'iconOpacity']],
 	['look', 'Home row', ['rows', 'scrollSpeed', 'homeFocus', 'sideMargin', 'bottomMargin', 'inputStatus', 'showLgHome', 'showSystem', 'hideSettings']],
@@ -617,6 +621,19 @@ export const PREFS: Pref[] = ALL_PREFS.map((p) => withTexts(((): PrefDef => {
 	return {...placed, visible: (c: UserConfig) => c.clock.show && (!own || own(c))};
 })()));
 
+/** Rows that only shape Hearth's classic icon row and clock widget: hidden while the Frame home screen (Dock or List) is on.
+ *  Their saved values stay, so switching back to Classic brings the old look back unchanged. */
+export const FRAME_HIDDEN: readonly string[] = [
+	'iconScale', 'tileShape', 'iconStyle', 'iconLight', 'iconColor', 'iconGap', 'iconOpacity',
+	'rows', 'sideMargin', 'bottomMargin', 'hideSettings',
+	'showLabels', 'labelColor', 'labelFont', 'labelSize', 'labelWeight',
+	'quietSec', 'quietDimSec', 'quietDimLevel',
+	'favSideMargin', 'favBottomMargin',
+	'showPeriod', 'showDate',
+	'clockSize', 'clockFont', 'clockWeight', 'clockTop', 'clockLeft', 'clockAlign', 'clockColor', 'clockShadow', 'clockScrim', 'clockOpacity',
+	'weatherOn', 'weatherUnit', 'weatherCity', 'weatherCityName', 'weatherRange'
+];
+
 export function findPref (id: string): Pref | undefined {
 	return PREFS.find((p) => p.id === id);
 }
@@ -629,7 +646,8 @@ export const GROUP_PREFIX = 'group:';
  *  groups become header rows (id `group:<tab>:<name>`, OK opens or closes) and only the rows of the open group
  *  show: `open` is a group name, '' (all closed) or FIRST_GROUP. Rows with no group always show. */
 export function optionsFor (tab: PrefTab, config: UserConfig, info?: SystemInfo, open?: string): OptionItem[] {
-	let rows = PREFS.filter((p) => p.tab === tab && (!p.visible || p.visible(config)) && (!p.shownWith || p.shownWith(config, info)))
+	const frame = config.homeLayout !== 'classic';
+	let rows = PREFS.filter((p) => p.tab === tab && (!frame || FRAME_HIDDEN.indexOf(p.id) === -1) && (!p.visible || p.visible(config)) && (!p.shownWith || p.shownWith(config, info)))
 		.sort((a, b) => (PLACE[a.id] ? PLACE[a.id].order : 1e6) - (PLACE[b.id] ? PLACE[b.id].order : 1e6));
 	// P83: while root has failed, System keeps only the SSAP switch and the Debug switch (no group header)
 	if (tab === 'system' && rootState() === 'no') rows = rows.filter((p) => NO_ROOT_ROWS.indexOf(p.id) !== -1).map((p) => ({...p, group: ''}));

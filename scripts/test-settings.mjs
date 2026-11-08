@@ -67,7 +67,8 @@ eq(s.stepValue([1, 2, 3], 1, -1, false), 1, 'arrow stops at the start');
 eq(s.stepValue([1, 2, 3], 99, 1, true), 2, 'unknown value starts from the first');
 
 // ---- prefs ----
-const c0 = s.DEFAULT_CONFIG;
+const cFrame = s.DEFAULT_CONFIG;                                   // a fresh install: the Frame Dock home screen
+const c0 = {...s.DEFAULT_CONFIG, homeLayout: 'classic'};        // most rows below belong to the classic icon row
 eq(p.applyPref(c0, 'iconScale', 'right').iconScale, 100, 'right arrow: icon size 90 -> 100');
 eq(p.applyPref(c0, 'iconScale', 'left').iconScale, 80, 'left arrow: icon size 90 -> 80');
 eq(p.applyPref({...c0, iconScale: 140}, 'iconScale', 'right').iconScale, 140, 'right arrow stops at the maximum');
@@ -94,8 +95,14 @@ for (const tab of ['look', 'clock', 'wallpaper', 'system']) {
   const list = p.optionsFor(tab, c0);
   eq(list.length >= 1 && list.length <= 30, true, `${tab} tab has ${list.length} options (a long list scrolls)`);
 }
-const look = p.optionsFor('look', c0);
-eq(look.map((o) => o.id).join(','), 'theme,iconScale,tileShape,iconStyle,iconGap,iconOpacity,rows,scrollSpeed,homeFocus,sideMargin,bottomMargin,inputStatus,showLgHome,showSystem,hideSettings,showLabels,labelColor,labelFont,labelSize,labelWeight,quietSec,quietDimSec,quietDimLevel,oledShift,recentsSize,resetLook', 'P35b: the Look tab lists its rows in group order');
+const look = p.optionsFor('look', {...c0, homeLayout: 'classic'});
+eq(look.map((o) => o.id).join(','), 'homeLayout,theme,iconScale,tileShape,iconStyle,iconGap,iconOpacity,rows,scrollSpeed,homeFocus,sideMargin,bottomMargin,inputStatus,showLgHome,showSystem,hideSettings,showLabels,labelColor,labelFont,labelSize,labelWeight,quietSec,quietDimSec,quietDimLevel,oledShift,recentsSize,resetLook', 'P35b: the Look tab lists its rows in group order');
+// Frame home screen (Dock / List, the default): the rows of the classic icon row and clock widget are hidden, their values kept
+eq(cFrame.homeLayout, 'dock', 'a fresh install starts on the Frame Dock');
+eq(p.optionsFor('look', cFrame).map((o) => o.id).join(','), 'homeLayout,theme,scrollSpeed,homeFocus,inputStatus,showLgHome,showSystem,oledShift,recentsSize,resetLook', 'Frame: the Look tab is pared down');
+eq(p.optionsFor('clock', {...cFrame, clock: {...cFrame.clock, show: true}}).map((o) => o.id).filter((id) => p.FRAME_HIDDEN.indexOf(id) !== -1).length, 0, 'Frame: no widget-look rows in the Clock tab');
+eq(p.applyPref(cFrame, 'homeLayout', 'ok').homeLayout, 'list', 'Home screen: Dock -> List');
+eq(p.applyPref({...cFrame, homeLayout: 'list'}, 'homeLayout', 'ok').homeLayout, 'classic', 'and List -> Classic');
 eq(p.applyPref(c0, 'rows', 'ok').rows, 2, 'Rows of apps: 1 -> 2');
 eq(p.applyPref(p.applyPref(c0, 'rows', 'ok'), 'rows', 'ok').rows, 1, 'and 2 -> 1');
 eq(p.applyPref(c0, 'showLabels', 'ok').showLabels, false, 'Show app names switches off');
