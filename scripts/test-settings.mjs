@@ -125,7 +125,7 @@ store[KEY] = JSON.stringify({defaultsV: 1, iconLight: true}); eq(s.loadConfig().
 store[KEY] = JSON.stringify({defaultsV: 1, iconStyle: 'nope'}); eq([s.loadConfig().iconStyle, s.DEFAULT_CONFIG.iconStyle], ['original', 'original'], 'an unknown icon style falls back to original');
 store[KEY] = JSON.stringify({defaultsV: 1, minimal: true}); eq(s.loadConfig().minimal, true, 'the minimalist choice is read back');
 store[KEY] = JSON.stringify({defaultsV: 1, appEdits: {'a.b': {label: 'X'}, 'c.d': {icon: 'nope'}}}); eq(s.loadConfig().appEdits, {'a.b': {label: 'X'}}, 'app edits are read back and cleaned');
-eq(p.optionsFor('system', c0).map((o) => o.id).join(','), 'updates,language,homeKey,remap,tvApps,noRootGuide,tvInput,replaceHome,samHome,powerOnApp,lgLogo,noUpdate,homeApp,preload,keepReady,keepRelaunch,showDebug', 'the System tab (P61b2: the Home button row moved to the Remote group): the TV app list first (shown only when not rooted), the helper script, the Home button, the power-on app, the LG logo, the experimental Home app row (P58c) and last the Debug tab switch (the TV-input row, 2.0.2, is one On/Off toggle)');
+eq(p.optionsFor('system', c0).map((o) => o.id).join(','), 'updates,language,homeButton,homeKey,remap,tvApps,noRootGuide,tvInput,replaceHome,samHome,powerOnApp,lgLogo,noUpdate,homeApp,preload,keepReady,keepRelaunch,showDebug', 'the System tab (P61b2: the Home button row moved to the Remote group): the TV app list first (shown only when not rooted), the helper script, the Home button, the power-on app, the LG logo, the experimental Home app row (P58c) and last the Debug tab switch (the TV-input row, 2.0.2, is one On/Off toggle)');
 eq(p.optionsFor('system', c0, {homeApp: null, homeHook: null, tvInput: true}).find((o) => o.id === 'tvInput').valueText, 'On', 'the TV-input row reads On when the TV lists Hearth (2.0.2)');
 eq(p.optionsFor('system', c0, {homeApp: null, homeHook: null, tvInput: false}).find((o) => o.id === 'tvInput').valueText, 'Off', 'and Off when it is not listed');
 eq(p.optionsFor('system', c0).some((o) => o.id === 'tvInput'), true, 'and is shown while the TV has not been asked')
@@ -168,10 +168,10 @@ eq(/experimental, webOS 4\.x/.test(homeAppRow({homeApp: ''}).label), true, 'the 
 eq(!!homeAppRow({homeApp: ''}).disabled, false, 'it is not greyed out on a TV without the setting (the toast says so)');
 eq(!!homeAppRow({homeApp: 'com.webos.app.home'}).disabled, false, 'it is usable on webOS 7.x where the setting exists');
 eq(homeAppRow({homeApp: 'com.webos.app.home'}).valueText, 'Off', 'Off while the setting names LG Home');
-eq(homeAppRow({homeApp: 'com.elfellahmed.cleanhearth'}).valueText, 'On', 'On while it names Hearth');
+eq(homeAppRow({homeApp: 'tld.my.customlauncher'}).valueText, 'On', 'On while it names Hearth');
 eq(!!homeAppRow({homeApp: 'com.webos.app.home', homeHook: {running: true, linked: true}}).disabled, true, 'greyed out while the helper is on');
-eq(!!p.optionsFor('system', c0, {homeApp: 'com.elfellahmed.cleanhearth', homeHook: {running: false, linked: false}}).find((o) => o.id === 'replaceHome').disabled, true, 'and the helper row is greyed out while the Home app setting names Hearth');
-eq(!!homeAppRow({homeApp: 'com.elfellahmed.cleanhearth', homeHook: {running: true, linked: true}}).disabled, false, 'a row that is on stays usable so it can be switched off');
+eq(!!p.optionsFor('system', c0, {homeApp: 'tld.my.customlauncher', homeHook: {running: false, linked: false}}).find((o) => o.id === 'replaceHome').disabled, true, 'and the helper row is greyed out while the Home app setting names Hearth');
+eq(!!homeAppRow({homeApp: 'tld.my.customlauncher', homeHook: {running: true, linked: true}}).disabled, false, 'a row that is on stays usable so it can be switched off');
 eq(p.ROOT_OPTIONS.indexOf('homeApp') !== -1, true, 'the Home app row needs root');
 eq(p.optionsFor('clock', c0).map((o) => o.id).filter((id) => !/^weather/.test(id)).join(','), 'widgetOn,clockFormat,showPeriod,showDate,clockSize,clockFont,clockWeight,clockTop,clockLeft,clockAlign,clockColor,clockShadow,clockScrim,clockOpacity', 'the Widget tab (P41f: Show widget first): Time rows, then Widget look with the font after the size, with the backdrop row');
 const fonts = [];

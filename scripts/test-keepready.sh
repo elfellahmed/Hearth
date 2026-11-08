@@ -4,8 +4,8 @@
 HERE="$(cd "$(dirname "$0")/.." && pwd)"
 SH="$HERE/src/keepready/keepready.sh"
 S=$(mktemp -d); trap 'rm -rf "$S"' EXIT
-mkdir -p "$S/bin" "$S/apps/com.elfellahmed.cleanhearth" "$S/etc/mm" "$S/init"
-echo '{}' > "$S/apps/com.elfellahmed.cleanhearth/appinfo.json"
+mkdir -p "$S/bin" "$S/apps/tld.my.customlauncher" "$S/etc/mm" "$S/init"
+echo '{}' > "$S/apps/tld.my.customlauncher/appinfo.json"
 cat > "$S/etc/mm/memchute.json" <<'EOT'
 {
   "Policy": "lite",
@@ -23,7 +23,7 @@ case "$U" in
  *getForegroundAppInfo) cat "$FAKE/front" ;;
  *running) cat "$FAKE/running" ;;
  *launch) echo "$B" >> "$FAKE/launches"
-    if [ -f "$FAKE/preload_fg" ] && echo "$B" | grep -q preload; then echo '{"returnValue":true,"appId":"com.elfellahmed.cleanhearth"}' > "$FAKE/front"; fi
+    if [ -f "$FAKE/preload_fg" ] && echo "$B" | grep -q preload; then echo '{"returnValue":true,"appId":"tld.my.customlauncher"}' > "$FAKE/front"; fi
     echo '{"returnValue":true}' ;;
 esac
 EOT
@@ -46,7 +46,7 @@ fail () { echo "FAIL: $*"; echo "--- log"; cat "$S/log" 2>/dev/null; exit 1; }
 ok () { echo "ok: $*"; }
 has () { grep -q -- "$2" "$1" 2>/dev/null; }
 
-echo 'x APP_CLOSED {"app_id":"com.elfellahmed.cleanhearth"} request close by launch(lite/policy)' > "$S/syslog"
+echo 'x APP_CLOSED {"app_id":"tld.my.customlauncher"} request close by launch(lite/policy)' > "$S/syslog"
 echo '{"returnValue":true,"appId":"com.webos.app.hdmi1"}' > "$S/front"
 echo '{"returnValue":true,"running":[{"id":"com.webos.app.hdmi1","pid":"1"}]}' > "$S/running"
 
@@ -56,7 +56,7 @@ mkdir -p "$DIR"; echo on > "$DIR/on"
 sh "$SH" run >/dev/null 2>&1 </dev/null
 has "$S/log" "discover: .*memchute.json" || fail "discover"; ok "discover finds the list"
 has "$S/log" "memory list: Hearth added" || fail "patch"; ok "memory list patched"
-grep -c com.elfellahmed.cleanhearth "$S/mounted_src" | grep -q '^1$' || fail "id once in copy"
+grep -c tld.my.customlauncher "$S/mounted_src" | grep -q '^1$' || fail "id once in copy"
 node -e 'JSON.parse(require("fs").readFileSync(process.argv[1],"utf8"))' "$S/mounted_src" 2>/dev/null || command -v node >/dev/null && ok "copy is valid JSON" || ok "(no node here)"
 grep -q 'memorymanager.service' "$S/restarts" || fail "restart"; ok "memory manager restarted"
 has "$S/log" "check: 0s after com.webos.app.hdmi1 .*Hearth is NOT in memory" || sleep 1
@@ -70,7 +70,7 @@ grep -q -i -E 'free|VmRSS|MemAvailable| MB' "$S/log" && fail "memory figures in 
 
 # Hearth still in memory: left alone, no numbers
 rm -f "$S/launches"
-echo '{"returnValue":true,"running":[{"id":"com.elfellahmed.cleanhearth","pid":"9","keepAlive":true}]}' > "$S/running"
+echo '{"returnValue":true,"running":[{"id":"tld.my.customlauncher","pid":"9","keepAlive":true}]}' > "$S/running"
 echo '{"returnValue":true,"appId":"com.webos.app.hdmi1"}' > "$S/front"
 sh "$SH" run >/dev/null 2>&1 </dev/null; sleep 1
 has "$S/log" "Hearth IS in memory" || fail "in memory"; [ ! -f "$S/launches" ] || fail "launched though alive"; ok "alive Hearth left alone"
@@ -95,12 +95,12 @@ sh "$SH" apply off | grep -q result=off || fail "off"
 has "$S/umounted" "memchute.json" || fail "umount"; ok "off removes files and the mount"
 
 # Hearth uninstalled: start-up run cleans up
-mkdir -p "$DIR"; echo on > "$DIR/on"; ln -sf "$DIR/keepready.sh" "$LINK"; rm -f "$S/apps/com.elfellahmed.cleanhearth/appinfo.json"
+mkdir -p "$DIR"; echo on > "$DIR/on"; ln -sf "$DIR/keepready.sh" "$LINK"; rm -f "$S/apps/tld.my.customlauncher/appinfo.json"
 sh "$SH" run >/dev/null 2>&1 </dev/null
 [ ! -d "$DIR" ] && [ ! -e "$LINK" ] || fail "no cleanup"; ok "uninstalled Hearth: cleaned up"
 
 # P74: every failure writes a code the launcher turns into plain words
-restore_list () { printf '{\n  "KeepOnLaunchEx": [\n    "com.webos.app.home"\n  ]\n}\n' > "$S/etc/mm/memchute.json"; echo '{}' > "$S/apps/com.elfellahmed.cleanhearth/appinfo.json"; rm -f "$S/mounted_src" "$S/restarts" "$S/mount_fail" "$S/no_unit" "$S/inactive" "$S/launches"; rm -rf "$DIR" "$LINK" "$S/discovered"; mkdir -p "$DIR"; echo on > "$DIR/on"; }
+restore_list () { printf '{\n  "KeepOnLaunchEx": [\n    "com.webos.app.home"\n  ]\n}\n' > "$S/etc/mm/memchute.json"; echo '{}' > "$S/apps/tld.my.customlauncher/appinfo.json"; rm -f "$S/mounted_src" "$S/restarts" "$S/mount_fail" "$S/no_unit" "$S/inactive" "$S/launches"; rm -rf "$DIR" "$LINK" "$S/discovered"; mkdir -p "$DIR"; echo on > "$DIR/on"; }
 state_is () { [ "$(cat "$DIR/state" 2>/dev/null)" = "$1" ]; }
 restore_list; touch "$S/mount_fail"; sh "$SH" run >/dev/null 2>&1 </dev/null; sleep 1
 state_is mount-failed || fail "mount failure state: $(cat "$DIR/state")"; ok "state mount-failed"
@@ -127,7 +127,7 @@ has "$S/launches" '"keepAlive":true' || fail "relaunch with LG Home in front"; o
 rm -f "$S/launches"; echo '{"returnValue":true,"appId":"com.webos.app.hdmi1"}' > "$S/front"
 sh "$SH" run >/dev/null 2>&1 </dev/null; sleep 1
 [ ! -f "$S/launches" ] && has "$S/log" "not interrupting" || fail "relaunch interrupted an app"; ok "relaunch: an app in front is never interrupted"
-echo '{"returnValue":true,"running":[{"id":"com.elfellahmed.cleanhearth","pid":"9"}]}' > "$S/running"; echo '{"returnValue":true,"appId":"com.webos.app.home"}' > "$S/front"
+echo '{"returnValue":true,"running":[{"id":"tld.my.customlauncher","pid":"9"}]}' > "$S/running"; echo '{"returnValue":true,"appId":"com.webos.app.home"}' > "$S/front"
 sh "$SH" run >/dev/null 2>&1 </dev/null; sleep 1
 [ ! -f "$S/launches" ] && has "$S/log" "relaunch: not needed" || fail "relaunch though Hearth is in memory"; ok "relaunch: not needed when Hearth is in memory"
 rm -f "$DIR/relaunch"; echo '{"returnValue":true,"running":[{"id":"com.webos.app.hdmi1","pid":"1"}]}' > "$S/running"
@@ -140,7 +140,7 @@ state_is ok && [ -f "$DIR/memlist.sum" ] && [ -f "$DIR/memlist.copy" ] || fail "
 cp "$S/orig.memchute.json" "$S/etc/mm/memchute.json"      # a restart of the TV: the mount is gone, the file is the TV's own again
 rm -f "$S/mounted_src" "$S/restarts"
 SEARCH_DIRS="$S/nowhere" sh "$SH" run >/dev/null 2>&1 </dev/null; sleep 1
-has "$S/log" "mounted again over" && state_is ok && grep -q com.elfellahmed.cleanhearth "$S/etc/mm/memchute.json" || fail "fast re-mount: $(tail -3 "$S/log")"; ok "restart of the TV: the earlier copy is mounted again, no search"
+has "$S/log" "mounted again over" && state_is ok && grep -q tld.my.customlauncher "$S/etc/mm/memchute.json" || fail "fast re-mount: $(tail -3 "$S/log")"; ok "restart of the TV: the earlier copy is mounted again, no search"
 [ -f "$S/restarts" ] || fail "no restart after the fast mount"; ok "the memory manager is still restarted once"
 # the TV's own file changed (firmware update): the copy is built again
 cp "$S/orig.memchute.json" "$S/etc/mm/memchute.json"; printf '{\n  "KeepOnLaunchEx": [\n    "com.webos.app.home"\n  ],\n  "NewKey": 5\n}\n' > "$S/etc/mm/memchute.json"
@@ -159,7 +159,7 @@ st=$(ps -o stat= -p "$bp" 2>/dev/null | cut -c1)
 if kill -0 "$bp" 2>/dev/null && [ "$st" != Z ]; then fail "the boot watcher survived apply"; fi; ok "apply stops the watcher the start-up link made"
 
 # a list without an LG Home entry is left alone
-echo '{"KeepOnLaunchEx":["x.y"]}' > "$S/etc/mm/memchute.json"; echo '{}' > "$S/apps/com.elfellahmed.cleanhearth/appinfo.json"
+echo '{"KeepOnLaunchEx":["x.y"]}' > "$S/etc/mm/memchute.json"; echo '{}' > "$S/apps/tld.my.customlauncher/appinfo.json"
 mkdir -p "$DIR"; echo on > "$DIR/on"; rm -f "$S/mounted_src"
 sh "$SH" run >/dev/null 2>&1 </dev/null; sleep 1
 [ ! -f "$S/mounted_src" ] && has "$S/log" "no LG Home entry" || fail "unknown list was changed"; ok "unknown list format: nothing changed"

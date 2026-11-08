@@ -22,7 +22,7 @@
 
 DIR="${DIR:-/media/developer/launcher-keepready}"
 LINK="${LINK:-/var/lib/webosbrew/init.d/51-launcher-keepready}"
-LAUNCHER_ID="${LAUNCHER_ID:-com.elfellahmed.cleanhearth}"
+LAUNCHER_ID="${LAUNCHER_ID:-tld.my.customlauncher}"
 APPS="${APPS:-/media/developer/apps/usr/palm/applications}"
 LAUNCHER="${LAUNCHER:-$APPS/$LAUNCHER_ID}"
 LUNA="${LUNA_SEND:-luna-send}"

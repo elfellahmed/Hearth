@@ -266,5 +266,9 @@
  {
   "file": "lib/fitscale.ts",
   "text": "px) scale("
+ },
+ {
+  "file": "lib/homehandoff.ts",
+  "text": "{}; U=\"http://127.0.0.1:$P/api/home/{}\";"
  }
 ]

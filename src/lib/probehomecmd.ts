@@ -15,7 +15,7 @@ DIR=\${HP_DIR:-${HOME_DIR}}
 REC=$DIR/hits.txt
 BAK=$DIR/keybinds.backup
 NONE=$DIR/keybinds.none
-APP=com.elfellahmed.cleanhearth
+APP=tld.my.customlauncher
 restore () {
   if [ -f "$BAK" ]; then cat "$BAK" > "$KEYS"; rm -f "$BAK"; echo restored=1
   elif [ -f "$NONE" ]; then echo '{}' > "$KEYS"; rm -f "$NONE"; echo restored=1

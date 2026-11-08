@@ -13,7 +13,7 @@ export const LGHOME_SCRIPT = `${LGHOME_DIR}/lghome.sh`;
 export const LGHOME_DEVICE_FILE = `${LGHOME_DIR}/lghome.dev`;
 export const LGHOME_MARK = 'lghome-v4';
 /** Hearth's own app id and the launch parameter that asks it to learn the Home key (phase 3a: the button job has no screen of its own). */
-export const LGHOME_HEARTH_ID = 'com.elfellahmed.cleanhearth';
+export const LGHOME_HEARTH_ID = 'tld.my.customlauncher';
 export const LGHOME_LEARN_PARAM = 'hearthLgHomeLearn';
 export const LGHOME_LOG = '/tmp/hearth-lghome.log';
 /** The command a remote button runs (key hook `exec` entry). */

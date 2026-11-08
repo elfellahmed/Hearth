@@ -2,10 +2,12 @@
 
 A quiet home screen for LG webOS TVs: your photo, a small clock and your apps, laid out as a **Dock** (a glass bar at the bottom) or a **List** (large app names on the left). The design follows [CleanFrame](https://github.com/nthnclrk/CleanFrame) by Nathan Clark (a Samsung Tizen launcher); everything underneath (root helpers, Home button, start-up, the live app list, wallpapers, screen saver) is [Hearth](https://github.com/rudra-avatar/Hearth) by rudra-avatar, which this repository forks. Both are MIT-licensed.
 
-- App ID `com.elfellahmed.cleanhearth`, so it installs next to Hearth instead of replacing it.
+- Same app ID as Hearth (`tld.my.customlauncher`): installing CleanHearth replaces Hearth and keeps its settings. Versions start at 3.0.0, above Hearth's 2.x. Remove Hearth's own repository from the Homebrew Channel, or a later Hearth release could be offered as an update over CleanHearth.
 - Choose the layout in **Settings → Look → Layout → Home screen** (Dock, List or Classic). While Dock or List is on, Settings hides the rows that only shaped Hearth's classic icon row.
 - Install through the Homebrew Channel with this repository: `https://raw.githubusercontent.com/elfellahmed/Hearth/main/repo/apps.json`, or install a release `.ipk` with webOS Dev Manager.
-- Status: early (0.1.0). Tested in the browser preview; first TV test pending on an LG CX (webOS 5).
+- **Home button opens** (Settings → System → Remote control): CleanHearth, or Glasshouse Home when [Glasshouse](https://github.com/rorygallagher2024/glasshouse) is installed. Switching to Glasshouse turns CleanHearth's helper and Home button mapping off (remembered) and switches Glasshouse Home on through Glasshouse's local API; switching back reverses it. On webOS 5 and 6 each switch restarts the TV's app manager.
+- **App marks**: `npm run marks -- pull --tv <TV address>` copies the official icons of your apps from the TV, `npm run marks -- make` turns them into white marks in `public/marks/` (with a preview page), and the next `npm run package` bundles them. The default list: Netflix, Prime Video, YouTube, Apple TV, HBO Max, Nanomid, Spotify, DAZN, ARD, ZDF and arte. The marks are the apps' logos, so they stay out of Git.
+- Status: early (3.0.0). Tested in the browser preview; first TV test pending on an LG CX (webOS 5).
 
 The rest of this README is Hearth's own documentation; where it says *Hearth*, the same applies to CleanHearth.
 
@@ -25,7 +27,7 @@ It replaces the busy home screen with something quiet:
 - **your apps and TV inputs in one row** along the bottom
 - a background that is plain **OLED black**, a **picture**, or a **slideshow** (your own photos or the 25 bundled photos)
 
-It is a normal webOS app (app ID `com.elfellahmed.cleanhearth`). On a rooted TV it can also become the screen the TV starts into and the one the Home button opens.
+It is a normal webOS app (app ID `tld.my.customlauncher`). On a rooted TV it can also become the screen the TV starts into and the one the Home button opens.
 
 **Old and new web views:** one install file runs on **Chromium 38** (webOS 3) and on **Chromium 53 and newer** (webOS 4 up to the newest). A small loader picks the right build when the app starts.
 
@@ -199,7 +201,7 @@ New to this? The [Beginners guide](https://rudra-avatar.github.io/Hearth/BEGINNE
 
 ### Option 2: install the file yourself
 
-Download `com.elfellahmed.cleanhearth_2.0.1_all.ipk` from the [Releases](../../releases) page, then use one of these:
+Download `tld.my.customlauncher_2.0.1_all.ipk` from the [Releases](../../releases) page, then use one of these:
 
 - **webOS Dev Manager on a computer** (Windows, Mac, Linux; [download](https://github.com/webosbrew/dev-manager-desktop)). No root needed, Developer Mode is enough.
 - **webOS Dev Manager on an Android phone** (the app *webOS Dev Manager* on Google Play). The downloaded file is in *Downloads*.
@@ -214,10 +216,10 @@ With Dev Manager:
 With SSH on a rooted TV:
 
 ```
-scp -O com.elfellahmed.cleanhearth_2.0.1_all.ipk root@TV_IP:/tmp/
+scp -O tld.my.customlauncher_2.0.1_all.ipk root@TV_IP:/tmp/
 ssh root@TV_IP
-luna-send -i luna://com.webos.appInstallService/dev/install '{"id":"com.ares.defaultName","ipkUrl":"/tmp/com.elfellahmed.cleanhearth_2.0.1_all.ipk","subscribe":true}'
-luna-send -n 1 luna://com.webos.applicationManager/launch '{"id":"com.elfellahmed.cleanhearth"}'
+luna-send -i luna://com.webos.appInstallService/dev/install '{"id":"com.ares.defaultName","ipkUrl":"/tmp/tld.my.customlauncher_2.0.1_all.ipk","subscribe":true}'
+luna-send -n 1 luna://com.webos.applicationManager/launch '{"id":"tld.my.customlauncher"}'
 ```
 
 ### Updating and removing
@@ -569,7 +571,7 @@ Older webOS versions do not need this.
 The script `tools/webos11-permission.sh` (inside the app) adds the permission. The installer writes Hearth's permission file again on every install or update, so the script installs itself as a boot hook that checks it at each start. Once, over SSH on the TV:
 
 ```
-sh /media/developer/apps/usr/palm/applications/com.elfellahmed.cleanhearth/tools/webos11-permission.sh
+sh /media/developer/apps/usr/palm/applications/tld.my.customlauncher/tools/webos11-permission.sh
 ```
 
 Or from a computer, with the file from this repository (`public/tools/`):
@@ -619,7 +621,7 @@ More in the [Troubleshooting guide](https://rudra-avatar.github.io/Hearth/troubl
 - **Obednal97**, pull requests #16 to #22, #25 and #39: input status (#16), the Settings scroll fix (#17), *Set Hearth as the TV's Home app* (#18), remote button reassigning and the remote drawings (#19, #22), *When Home is pressed* (#20), icon refresh after app updates (#21), *When the TV turns on, open...* with the TV's start-up table method (#25), and the clear message and the 2016 Magic Remote drawing for TVs that cannot use the other remote method (#39, issue #36), and the idea that a waking pointer must not click anything in quiet mode (#46). Hearth's code is adapted from theirs.
 - **itsempty77**, issue #47: the report and photos of Hearth drawn too large on a 1280x720 TV, which led to the screen fit in 2.1.5.
 - **James18232**, issue #36: the debugging on a webOS 3.4.3 TV that found how the LG Home tile and button job can work there (sending the Home key) and which remote device takes it.
-- **simbasjungles**, free-my-tv pull request #285: the fix for the "1008" error that newer LG firmware gives a web page's connection to the TV's remote-control service (SSAP): a small packaged service connects with the right origin. Hearth's helper service `com.elfellahmed.cleanhearth.ssap` follows that idea and is written in Hearth's own code; it is what makes the app list work without root on webOS 11.2.
+- **simbasjungles**, free-my-tv pull request #285: the fix for the "1008" error that newer LG firmware gives a web page's connection to the TV's remote-control service (SSAP): a small packaged service connects with the right origin. Hearth's helper service `tld.my.customlauncher.ssap` follows that idea and is written in Hearth's own code; it is what makes the app list work without root on webOS 11.2.
 - **Recent apps panel, icon shapes and bottom fade:** community contribution, author not named. The idea and the TV services to call came from it; Hearth's code is its own.
 
 **Projects and ideas:**
@@ -651,7 +653,7 @@ Needs Node 18+.
 npm install
 npm test           # unit tests, plus the shell tests of the TV scripts
 npm run build      # type-check, then build dist/ (app.js for Chrome 53+, app.legacy.js for webOS 3.x / Chromium 38)
-npm run package    # dist/ -> build/com.elfellahmed.cleanhearth_<version>_all.ipk
+npm run package    # dist/ -> build/tld.my.customlauncher_<version>_all.ipk
 ```
 
 `npm run dev` serves the UI in a desktop browser with sample apps and folders.

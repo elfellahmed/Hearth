@@ -1,7 +1,7 @@
 {
-  "id": "com.elfellahmed.cleanhearth",
-  "version": "0.1.0",
-  "vendor": "com.elfellahmed.cleanhearth",
+  "id": "tld.my.customlauncher",
+  "version": "3.0.0",
+  "vendor": "tld.my.customlauncher",
   "type": "web",
   "main": "index.html",
   "title": "CleanHearth",

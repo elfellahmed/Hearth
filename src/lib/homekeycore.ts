@@ -3,7 +3,7 @@
 // Input Hook's log, and the two small things Hearth remembers (what it set, and where detecting started).
 //
 // Input Hook (org.webosbrew.inputhook) keeps its buttons in /home/root/.config/lginputhook/keybinds.json: an object keyed by
-// the button's number, for example {"773": {"action": "launch", "id": "com.elfellahmed.cleanhearth"}}. It watches the file, so a
+// the button's number, for example {"773": {"action": "launch", "id": "tld.my.customlauncher"}}. It watches the file, so a
 // change applies at once. See homekey.ts for reading and writing it on the TV.
 
 import {APP_ID} from '../config/constants';

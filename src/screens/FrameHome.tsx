@@ -6,6 +6,7 @@ import {useOkPress} from '../hooks/useOkPress';
 import {useClock} from '../hooks/useClock';
 import {timeParts, type TimeFormat} from '../lib/clock';
 import {monoFor} from '../lib/monoicon';
+import {loadMarks, markFor, onMarks} from '../lib/marks';
 import {initialStepState, stepDecision, type ScrollSpeed} from '../lib/scrollspeed';
 import {t as tt} from '../i18n';
 
@@ -65,10 +66,14 @@ function useShift (on: boolean): {x: number; y: number} {
 	return on ? SHIFT_STEPS[i] : SHIFT_STEPS[0];
 }
 
-/** The app's icon as a white shape (made once per icon and kept), or its own picture until the shape is ready. */
+/** The app's mark: the hand-checked one bundled for it (lib/marks.ts), else its icon as a white shape (made once per icon
+ *  and kept), or its own picture until the shape is ready. A picture the owner chose for the app (a data: address) wins. */
 function AppMark ({item}: {item: TileModel}) {
 	const [, redraw] = useState(0);
 	const again = useCallback(() => redraw((n) => n + 1), []);
+	const own = !!item.imageUrl && item.imageUrl.indexOf('data:') === 0;
+	const mark = own ? null : markFor(item.key);
+	if (mark) return <span class="frame-mark frame-mark--mono frame-mark--bundled" style={`-webkit-mask-image:url("${mark}")`} />;
 	if (item.imageUrl) {
 		const mono = monoFor(item.imageUrl, again);
 		if (mono) return <span class="frame-mark frame-mark--mono" style={`-webkit-mask-image:url("${mono}")`} />;
@@ -91,6 +96,8 @@ function indexOfKey (list: TileModel[], key: string | null | undefined): number 
 	return -1;
 }
 
+let marksAsked = false;
+
 export function FrameHome ({layout, items, showClock, timeFormat, scrollSpeed, oledShift, active, paused, onActivate, onLongPress, onBack, wake, homeKey, focus, moveMode, tileKeys, onMovePick, onMoveStep, onMoveExit}: Props) {
 	const apps = items.filter((it) => CONTROL_KEYS.indexOf(it.key) === -1);
 	const controls = CONTROL_KEYS.map((k) => items.filter((it) => it.key === k)[0]).filter(Boolean) as TileModel[];
@@ -103,6 +110,12 @@ export function FrameHome ({layout, items, showClock, timeFormat, scrollSpeed, o
 	const inControls = zone === 'controls' && controls.length > 0;
 	const selected = inControls ? controls[ctl] : apps[at];
 	const shift = useShift(oledShift && !paused);
+	const [, marksSeen] = useState(0);
+	useEffect(() => {
+		const stop = onMarks(() => marksSeen((n) => n + 1));
+		if (!marksAsked) { marksAsked = true; loadMarks(); }
+		return stop;
+	}, []);
 
 	// The key handler is registered once per layout, so it reads everything through refs.
 	const live = useRef({apps, controls, at, ctl, inControls, moveMode, tileKeys, onBack, onMovePick, onMoveStep, onMoveExit});

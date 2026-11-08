@@ -1,6 +1,6 @@
 // App-wide constants that are not visual tokens (see theme/tokens.ts for those).
 
-export const APP_ID = 'com.elfellahmed.cleanhearth';
+export const APP_ID = 'tld.my.customlauncher';
 
 /** webOS app IDs the launcher itself needs. */
 export const SYSTEM_APP = {

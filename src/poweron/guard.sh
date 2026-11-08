@@ -19,7 +19,7 @@ LINK="${LINK:-/var/lib/webosbrew/init.d/45-launcher-poweron}"
 OVERRIDE="${OVERRIDE:-/var/luna/preferences/bootd.json}"
 STOCK="${STOCK:-/etc/palm/bootd.json}"
 LOADED="${LOADED:-/tmp/launcher-poweron.loaded}"
-LAUNCHER_ID="${LAUNCHER_ID:-com.elfellahmed.cleanhearth}"
+LAUNCHER_ID="${LAUNCHER_ID:-tld.my.customlauncher}"
 LAUNCHER="${LAUNCHER:-/media/developer/apps/usr/palm/applications/$LAUNCHER_ID}"
 LOG="${LOG:-/tmp/launcher-poweron.log}"
 

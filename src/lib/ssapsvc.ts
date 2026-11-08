@@ -1,4 +1,4 @@
-// S3: the app list without root through Hearth's own helper service (`services/com.elfellahmed.cleanhearth.ssap`, packaged in
+// S3: the app list without root through Hearth's own helper service (`services/tld.my.customlauncher.ssap`, packaged in
 // the ipk). Newer LG firmware closes the page's own connection to the TV's remote-control port with code 1008 before
 // anything is said; the service opens the same port from Node, where the Origin header can be chosen. The page only
 // calls the service over Luna; nothing runs at start-up.
@@ -9,7 +9,7 @@ import type {Variant} from './ssapreg';
 
 type Json = Record<string, unknown>;
 
-export const SSAP_SERVICE = 'luna://com.elfellahmed.cleanhearth.ssap';
+export const SSAP_SERVICE = 'luna://tld.my.customlauncher.ssap';
 
 /** The route the service used: port, encrypted or not, Origin header ('' = none). */
 export interface SvcRoute {port: number; tls: boolean; origin: string}

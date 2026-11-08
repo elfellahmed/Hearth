@@ -7,7 +7,7 @@ export const INSTALL_SH = '/tmp/hearth-install.sh';
 export const INSTALL_OUT = '/tmp/hearth-install.out';
 /** Where the .ipk is put for the install service, in this order (R2-b1: it did not see /tmp). */
 export const INSTALL_PLACES = ['/media/developer/hearth-install.ipk', '/tmp/hearth-install.ipk'];
-export const INSTALL_ID = 'com.elfellahmed.cleanhearth';
+export const INSTALL_ID = 'tld.my.customlauncher';
 const SHA = /^[0-9a-f]{64}$/;
 const URL_OK = /^https:\/\/github\.com\/elfellahmed\/Hearth\/releases\/download\/[A-Za-z0-9._\/-]+$/;
 const VER = /^\d{1,3}\.\d{1,3}\.\d{1,3}$/;

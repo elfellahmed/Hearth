@@ -7,15 +7,15 @@
 // gives back the TV's own behaviour.
 //
 // Cost: one object lookup per key press. No timers, no polling, no extra process. The button map comes
-// from configd (com.elfellahmed.cleanhearth.remap), pushed to this filter by a subscription, so a change in
+// from configd (tld.my.customlauncher.remap), pushed to this filter by a subscription, so a change in
 // Hearth applies at once.
 //
 // Runs in the Qt JS engine of webOS 4 (ES5 only). Each filter file has its own scope; init() is called
 // when the chain is loaded. Every handler returns KeyPolicy.NextPolicy for anything it does not own,
 // so the rest of the chain (LG's filters) behaves exactly as before.
 
-var HEARTH_ID = 'com.elfellahmed.cleanhearth';
-var CONFIG_NAME = 'com.elfellahmed.cleanhearth.remap';
+var HEARTH_ID = 'tld.my.customlauncher';
+var CONFIG_NAME = 'tld.my.customlauncher.remap';
 var CAPTURE_MS = 60000;
 
 // Buttons known by name. The name (not the number) is what Hearth stores, so a map keeps working if a

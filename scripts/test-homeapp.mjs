@@ -14,7 +14,7 @@ const eq = (a, b, m) => { const ok = a === b; if (!ok) fail++; console.log(ok ? 
 // ---- the TV's replies (as luna-send prints them on a webOS 4.5 TV, and as a Luna call hands them over) ----
 const printed = '{\n    "subscribed": false,\n    "category": "general",\n    "method": "getSystemSettings",\n    "settings": {\n        "defaultApps": {\n            "home": "com.webos.app.fullhome"\n        }\n    },\n    "returnValue": true\n}\n';
 eq(h.parseHomeSetting(printed), 'com.webos.app.fullhome', 'the Home app is read from luna-send\'s output');
-eq(h.parseHomeSetting({returnValue: true, settings: {defaultApps: {home: 'com.elfellahmed.cleanhearth'}}}), 'com.elfellahmed.cleanhearth', 'and from a Luna call\'s reply');
+eq(h.parseHomeSetting({returnValue: true, settings: {defaultApps: {home: 'tld.my.customlauncher'}}}), 'tld.my.customlauncher', 'and from a Luna call\'s reply');
 const missing = '{\n    "subscribed": false,\n    "returnValue": false,\n    "errorText": "There is no matched result from DB"\n}\n';
 eq(h.parseHomeSetting(missing), '', 'a TV without the setting says so (no matched result): ""');
 eq(h.parseHomeSetting({returnValue: true, settings: {}}), '', 'an answer without the setting: ""');

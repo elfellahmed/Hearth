@@ -44,7 +44,8 @@ import {isWebOS} from './lib/luna';
 import {listening, resumeListening} from './lib/keydetect';
 import {hearthCodes, keyLabel, readRecord, type AutoResult} from './lib/homekeycore';
 import {setEngineAtBoot} from './lib/homeengine';
-import {readBinds, syncKeepBind} from './lib/homekey';
+import {clearHomeKey, readBinds, setHomeKey, syncKeepBind} from './lib/homekey';
+import {glasshouseStatus, setGlasshouseHome, type Handoff} from './lib/homehandoff';
 import {Notice, type NoticeButton} from './components/Notice';
 import {Preload} from './screens/Preload';
 import {homeAppMessage, readHomeApp, restoreHomeApp, setHearthAsHome} from './lib/homeapp';
@@ -849,6 +850,67 @@ export function App () {
 	// I2: for callbacks that run later (after an await): applies the change to the CURRENT settings, never to the copy from click time
 	const patchConfig = (patch: Partial<UserConfig> | ((c: UserConfig) => Partial<UserConfig>)) => setConfig((c) => { const next = {...c, ...(typeof patch === 'function' ? patch(c) : patch)}; saveConfig(next); return next; });
 
+	// ----- CleanHearth: the Home button goes to CleanHearth or to Glasshouse Home (lib/homehandoff.ts) -----
+	/** Puts back what CleanHearth had switched on before the hand-over. Resolves '' when all of it worked. */
+	const restoreTakeover = (h: Handoff | null): Promise<string> => {
+		let chain: Promise<string> = Promise.resolve('');
+		if (h && h.helper) chain = chain.then((bad) => installHomeHook().then((r) => bad || (r.result === 'applied' ? '' : hookMessage(r.result, r.detail))));
+		if (h && h.codes.length) chain = chain.then((bad) => setHomeKey(h.codes[0]).then((o) => bad || (o.ok ? '' : o.text)));
+		return chain;
+	};
+	/** Home -> Glasshouse Home: CleanHearth's helper and Home button mapping off (remembered), then Glasshouse Home on. */
+	const handHomeToGlasshouse = () => {
+		const samOn = !!(systemInfo.samHome && (systemInfo.samHome.enabled || systemInfo.samHome.linked)) || config.samHome;
+		const homeAppOn = typeof systemInfo.homeApp === 'string' ? systemInfo.homeApp === APP_ID : config.homeApp;
+		if (samOn || homeAppOn) { showToast(tt('handoff.turnOffFirst', {v1: samOn ? tt('pref.samHome.label') : tt('pref.homeApp.label')}), 'error'); return; }
+		showToast(tt('handoff.working'));
+		glasshouseStatus().then((gh) => {
+			if (!gh.found) { showToast(tt('handoff.noGlasshouse'), 'error'); return; }
+			if (!gh.supported) { showToast(tt('handoff.unsupported'), 'error'); return; }
+			const helper = !!(systemInfo.homeHook && (systemInfo.homeHook.running || systemInfo.homeHook.linked)) || config.replaceHome;
+			readBinds().then((read) => (read.ok ? hearthCodes(read.binds) : []), () => [] as number[]).then((codes) => {
+				const handoff: Handoff = {helper, codes};
+				const off: Promise<unknown>[] = [];
+				if (helper) off.push(removeHomeHook());
+				if (codes.length) off.push(clearHomeKey());
+				Promise.all(off).then(() => {
+					// saved before Glasshouse is switched on: that can restart the app manager under this page
+					patchConfig({homeButton: 'glasshouse', handoff, handoffPending: '', replaceHome: false});
+					getHookStatus().then((homeHook) => setSystemInfo((previous) => ({...previous, homeHook})));
+					if (gh.enabled) { showToast(tt('handoff.toGlasshouseDone')); return; }
+					setGlasshouseHome(true).then((why) => {
+						if (!why) { log('home button: handed to Glasshouse Home'); showToast(tt('handoff.toGlasshouseDone')); return; }
+						// Glasshouse refused: CleanHearth takes Home back at once rather than leave nobody on it
+						patchConfig({homeButton: 'cleanhearth', handoff: null});
+						restoreTakeover(handoff).then(() => showToast(tt('handoff.failed', {why}), 'error'));
+					});
+				});
+			});
+		});
+	};
+	/** Home -> CleanHearth: Glasshouse Home off, then CleanHearth's helper and mapping back as they were. */
+	const takeHomeBack = (quiet?: boolean) => {
+		const handoff = config.handoff;
+		// saved first: switching Glasshouse Home off can restart the app manager and close this page; the next start finishes
+		patchConfig({homeButton: 'cleanhearth', handoffPending: 'restore'});
+		if (!quiet) showToast(tt('handoff.working'));
+		glasshouseStatus().then((gh) => (gh.found && gh.enabled ? setGlasshouseHome(false) : '')).then((why) => {
+			if (why) { patchConfig({homeButton: 'glasshouse', handoffPending: ''}); showToast(tt('handoff.failed', {why}), 'error'); return; }
+			restoreTakeover(handoff).then((bad) => {
+				patchConfig({handoff: null, handoffPending: '', replaceHome: !!(handoff && handoff.helper)});
+				getHookStatus().then((homeHook) => setSystemInfo((previous) => ({...previous, homeHook})));
+				log('home button: back to CleanHearth' + (bad ? ` (part failed: ${bad})` : ''));
+				showToast(bad ? tt('handoff.partly', {why: bad}) : tt('handoff.toCleanHearthDone'), bad ? 'error' : 'info');
+			});
+		});
+	};
+	// a hand-back cut short by the app manager restarting: finish it now
+	useEffect(() => {
+		if (config.handoffPending !== 'restore' || !isWebOS() || rootState() === 'no') return undefined;
+		const timer = window.setTimeout(() => takeHomeBack(true), TIMING.backgroundWorkMs);
+		return () => window.clearTimeout(timer);
+	}, []);                                   // eslint-disable-line react-hooks/exhaustive-deps
+
 	// ----- Root has failed (P83) -----
 	// Turns on the experimental app list through the TV's remote-control service (SSAP); no root needed.
 	const startTvApps = () => {
@@ -1230,6 +1292,19 @@ export function App () {
 						showToast(homeAppMessage(result, detail), result === 'applied' ? 'info' : 'error');
 					});
 				}
+			}
+			else if (optionId === 'homeButton') {
+				const toGlasshouse = config.homeButton !== 'glasshouse';
+				const close = () => setNotice(null);
+				setNotice({
+					title: toGlasshouse ? tt('handoff.toGlasshouseTitle') : tt('handoff.toCleanHearthTitle'),
+					text: toGlasshouse ? tt('handoff.toGlasshouseText') : tt('handoff.toCleanHearthText'),
+					buttons: [
+						{label: tt('handoff.cancel'), tone: 'light', run: close},
+						{label: tt('handoff.go'), tone: 'danger', run: () => { close(); if (toGlasshouse) handHomeToGlasshouse(); else takeHomeBack(); }}
+					],
+					onBack: close
+				});
 			}
 			else if (optionId === 'replaceHome') {
 				const refresh = () => getHookStatus().then((homeHook) => setSystemInfo((previous) => ({...previous, homeHook})));

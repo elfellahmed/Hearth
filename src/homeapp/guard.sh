@@ -13,7 +13,7 @@
 
 DIR="${DIR:-/media/developer/launcher-homeapp}"
 LINK="${LINK:-/var/lib/webosbrew/init.d/46-launcher-homeapp}"
-LAUNCHER_ID="${LAUNCHER_ID:-com.elfellahmed.cleanhearth}"
+LAUNCHER_ID="${LAUNCHER_ID:-tld.my.customlauncher}"
 LAUNCHER="${LAUNCHER:-/media/developer/apps/usr/palm/applications/$LAUNCHER_ID}"
 LUNA="${LUNA_SEND:-luna-send}"
 NAP="${NAP:-sleep}"                      # tests set it to "true" so nothing waits

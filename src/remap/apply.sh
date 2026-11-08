@@ -20,13 +20,13 @@
 # Run at boot by a link in /var/lib/webosbrew/init.d, and by Hearth when the setting changes or Hearth opens.
 
 REMAP="${REMAP:-/media/developer/launcher-remap}"
-LAUNCHER="${LAUNCHER:-/media/developer/apps/usr/palm/applications/com.elfellahmed.cleanhearth}"
+LAUNCHER="${LAUNCHER:-/media/developer/apps/usr/palm/applications/tld.my.customlauncher}"
 LINK="${LINK:-/var/lib/webosbrew/init.d/47-launcher-remap}"
 LOG="${LOG:-/tmp/launcher-remap.log}"
 LUNA="${LUNA:-luna-send}"
 SNAPDIR="${SNAPDIR:-/tmp}"
 FILTERS=com.webos.surfacemanager.keyFilters
-MAPNAME=com.elfellahmed.cleanhearth.remap
+MAPNAME=tld.my.customlauncher.remap
 FILTER="$REMAP/keyfilter.js"
 ENTRY="{\"handler\":\"hearthRemap\",\"file\":\"$FILTER\"}"
 

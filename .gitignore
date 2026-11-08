@@ -11,3 +11,8 @@ Project Progress/
 dist-legacy
 site/
 public/languages/
+
+# CleanHearth: app marks made from the owner's own TV icons (the apps' logos): local only, packed into the owner's .ipk
+public/marks/*
+!public/marks/README.md
+.local/

@@ -7,25 +7,25 @@
   },
   "packages": [
     {
-      "id": "com.elfellahmed.cleanhearth",
+      "id": "tld.my.customlauncher",
       "title": "CleanHearth",
       "iconUri": "https://raw.githubusercontent.com/elfellahmed/Hearth/main/public/largeIcon.png",
       "shortDescription": "A quiet home screen: a photo, a small clock and your apps, as a Dock or a List.",
       "fullDescriptionUrl": "https://raw.githubusercontent.com/elfellahmed/Hearth/main/repo/description.html",
       "manifest": {
-        "id": "com.elfellahmed.cleanhearth",
-        "version": "0.1.0",
+        "id": "tld.my.customlauncher",
+        "version": "3.0.0",
         "type": "web",
         "title": "CleanHearth",
         "appDescription": "A quiet home screen for LG webOS TVs, after CleanFrame, built on Hearth.",
         "iconUri": "https://raw.githubusercontent.com/elfellahmed/Hearth/main/public/largeIcon.png",
         "sourceUrl": "https://github.com/elfellahmed/Hearth",
         "rootRequired": "optional",
-        "ipkUrl": "https://github.com/elfellahmed/Hearth/releases/download/v0.1.0/com.elfellahmed.cleanhearth_0.1.0_all.ipk",
+        "ipkUrl": "https://github.com/elfellahmed/Hearth/releases/download/v3.0.0/tld.my.customlauncher_3.0.0_all.ipk",
         "ipkHash": {
-          "sha256": "d43ad49abac2f39d7174e1d23527d791d1c03495dac52ac98bda153c5210d289"
+          "sha256": "64a24c37e9e8e2839a8730a3d351fc21e240a842836b8ac0717f22dba96f519b"
         },
-        "ipkSize": 22005524
+        "ipkSize": 22008216
       }
     }
   ]

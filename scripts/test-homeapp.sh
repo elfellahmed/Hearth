@@ -24,21 +24,21 @@ guard () { DIR="$T/dir" LINK="$T/init.d/46-launcher-homeapp" LAUNCHER="$T/launch
 sets () { if [ -f "$T/sets" ]; then wc -l < "$T/sets" | tr -d ' '; else echo 0; fi; }
 linked () { [ -e "$T/init.d/46-launcher-homeapp" ] && echo yes || echo no; }
 
-reset; echo com.elfellahmed.cleanhearth > "$T/home"; echo com.webos.app.fullhome > "$T/dir/previous"
+reset; echo tld.my.customlauncher > "$T/home"; echo com.webos.app.fullhome > "$T/dir/previous"
 check "Hearth installed: nothing to do" "$(guard)" "installed"
 check "and the setting is not touched" "$(sets)" "0"
 check "and the check stays for the next start" "$(linked)" "yes"
 
-reset; echo com.elfellahmed.cleanhearth > "$T/home"; echo com.webos.app.fullhome > "$T/dir/previous"; rm -rf "$T/launcher"
+reset; echo tld.my.customlauncher > "$T/home"; echo com.webos.app.fullhome > "$T/dir/previous"; rm -rf "$T/launcher"
 check "Hearth uninstalled, the setting still names it: the app from before is put back" "$(guard)" "restored com.webos.app.fullhome"
 check "the setting now names it" "$(cat "$T/home")" "com.webos.app.fullhome"
 check "the check removes its start-up link" "$(linked)" "no"
 check "and its folder" "$([ -d "$T/dir" ] && echo yes || echo no)" "no"
 check "and says so in the log" "$(grep -c 'opens com.webos.app.fullhome again' "$T/log")" "1"
 
-reset; echo com.elfellahmed.cleanhearth > "$T/home"; rm -rf "$T/launcher"; rm -f "$T/dir/previous"
+reset; echo tld.my.customlauncher > "$T/home"; rm -rf "$T/launcher"; rm -f "$T/dir/previous"
 check "nothing saved: LG Home (com.webos.app.home) is put back" "$(guard)" "restored com.webos.app.home"
-reset; echo com.elfellahmed.cleanhearth > "$T/home"; rm -rf "$T/launcher"; echo "x'; reboot; '" > "$T/dir/previous"
+reset; echo tld.my.customlauncher > "$T/home"; rm -rf "$T/launcher"; echo "x'; reboot; '" > "$T/dir/previous"
 check "a saved value that is not an app id is not used" "$(guard)" "restored com.webos.app.home"
 
 reset; echo com.example.otherhome > "$T/home"; rm -rf "$T/launcher"; echo com.webos.app.fullhome > "$T/dir/previous"
@@ -46,7 +46,7 @@ check "the setting was changed since: it is left alone" "$(guard)" "left alone"
 check "nothing is written" "$(sets)" "0"
 check "the check still removes itself" "$(linked)" "no"
 
-reset; echo com.elfellahmed.cleanhearth > "$T/home"; rm -rf "$T/launcher"; : > "$T/down"
+reset; echo tld.my.customlauncher > "$T/home"; rm -rf "$T/launcher"; : > "$T/down"
 check "the settings service does not answer: wait for the next start" "$(guard)" "waiting"
 check "nothing is written" "$(sets)" "0"
 check "the check stays" "$(linked)" "yes"

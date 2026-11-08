@@ -69,7 +69,7 @@ export interface SystemInfo {
 /** The options that run shell commands, so they can't work without root. */
 /** System rows that stay while root has failed (P83). */
 export const NO_ROOT_ROWS = ['updates', 'language', 'languageRemove', 'tvApps', 'noRootGuide', 'showDebug'];
-export const ROOT_OPTIONS = ['remap', 'replaceHome', 'samHome', 'homeApp', 'homeKey', 'preload', 'keepReady', 'keepRelaunch', 'tvInput', 'powerOnApp', 'lgLogo', 'noUpdate', 'screensaver', 'screensaverPictures', 'screensaverInterval', 'screensaverShuffle', 'screensaverCare', 'screensaverFit', 'screensaverDim', 'screensaverPowerOff', 'screensaverShow'];
+export const ROOT_OPTIONS = ['homeButton', 'remap', 'replaceHome', 'samHome', 'homeApp', 'homeKey', 'preload', 'keepReady', 'keepRelaunch', 'tvInput', 'powerOnApp', 'lgLogo', 'noUpdate', 'screensaver', 'screensaverPictures', 'screensaverInterval', 'screensaverShuffle', 'screensaverCare', 'screensaverFit', 'screensaverDim', 'screensaverPowerOff', 'screensaverShow'];
 
 
 /** Why a row is greyed out, or null when it is usable. */
@@ -96,6 +96,8 @@ export function disabledReason (id: string, info?: SystemInfo, config?: UserConf
 	if (id === 'rows' && config && config.favourites && config.favourites.length > 0) return td('disabled.rows');
 	// the Home app setting and the helper + Home button are two ways of replacing LG Home: only one at a time (a row that is on stays usable, so it can be switched off)
 	// 2.0.3 (R3, F2): helper, SAM stand-in and Home app: any one that is on greys the other two out (a row that is on stays usable, so it can be switched off)
+	// CleanHearth: while Glasshouse Home has the Home button, CleanHearth's own ways of taking Home stay off (Home button opens -> CleanHearth first)
+	if (config && config.homeButton === 'glasshouse' && (id === 'replaceHome' || id === 'samHome' || id === 'homeApp' || id === 'homeKey')) return td('disabled.glasshouseHome');
 	if (id === 'samHome' && info && info.samBusy) return td('disabled.samBusy');
 	if (id === 'homeApp' && !homeAppIsOn(info, config)) {
 		if (helperIsOn(info, config)) return td('disabled.homeApp');
@@ -475,6 +477,11 @@ const BASE_PREFS: PrefDef[] = [
 		text: () => HEARTH_VERSION
 	},
 	{
+		// CleanHearth: the Home button opens CleanHearth or Glasshouse Home (lib/homehandoff.ts); OK opens the choice
+		id: 'homeButton', tab: 'system', kind: 'action',
+		text: (c) => (c.homeButton === 'glasshouse' ? td('pref.homeButton.glasshouse') : td('pref.homeButton.cleanhearth'))
+	},
+	{
 		id: 'homeKey', tab: 'system', kind: 'action',
 		text: (_c, info) => {
 			const code = info && info.homeKey !== undefined ? info.homeKey : recordedCode();
@@ -603,7 +610,7 @@ const LAYOUT: [PrefTab, string, string[]][] = [
 	['wallpaper', '', ['wallpaper', 'wallpaperFit', 'interval', 'shuffle', 'wallpaperOpacity', 'fadeStrength']],   // P66b: few rows, no groups (was Background and Picture)
 	['saver', '', ['screensaver', 'screensaverPictures', 'screensaverInterval', 'screensaverShuffle', 'screensaverFit', 'screensaverCare', 'screensaverDim', 'screensaverPowerOff', 'screensaverShow']],
 	['system', '', ['updates', 'language', 'languageRemove']],
-	['system', 'Remote control', ['homeKey', 'remap']],
+	['system', 'Remote control', ['homeButton', 'homeKey', 'remap']],
 	['system', 'TV start', ['tvApps', 'noRootGuide', 'tvInput', 'replaceHome', 'samHome', 'powerOnApp', 'lgLogo', 'noUpdate', 'homeApp']],
 	['system', 'Memory', ['preload', 'keepReady', 'keepRelaunch']],
 	['system', '', ['showDebug']]

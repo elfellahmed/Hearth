@@ -15,7 +15,7 @@ export const REMAP_VERSION = '6';
 export const REMAP_DIR = '/media/developer/launcher-remap';
 export const REMAP_LINK = '/var/lib/webosbrew/init.d/47-launcher-remap';
 export const REMAP_LOG = '/tmp/launcher-remap.log';
-export const REMAP_CONFIG = 'com.elfellahmed.cleanhearth.remap';
+export const REMAP_CONFIG = 'tld.my.customlauncher.remap';
 
 /** What a button does instead of the TV's own action. */
 export type RemapAction =

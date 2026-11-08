@@ -16,7 +16,7 @@ const bin = join(dir, 'bin'); const dev = join(dir, 'dev'); mkdirSync(bin); mkdi
 const script = join(dir, 'lghome.sh');
 writeFileSync(script, c.LGHOME_SCRIPT_TEXT);
 // fake luna-send: answers from the file `lunaanswer`
-writeFileSync(join(bin, 'luna-send'), `#!/bin/sh\necho "$@" >> "${dir}/lunalog"\ncase "$*" in *com.elfellahmed.cleanhearth*) cat "${dir}/lunahearth" ;; *) cat "${dir}/lunaanswer" ;; esac\n`);
+writeFileSync(join(bin, 'luna-send'), `#!/bin/sh\necho "$@" >> "${dir}/lunalog"\ncase "$*" in *tld.my.customlauncher*) cat "${dir}/lunahearth" ;; *) cat "${dir}/lunaanswer" ;; esac\n`);
 writeFileSync(join(dir, 'lunahearth'), '{"returnValue": false}\n'); chmodSync(join(bin, 'luna-send'), 0o755);
 const procFor = (words, bits) => {
 	// the KEY line: words from the highest down; bit 773 is word (773/bits) from the right, bit (773%bits)

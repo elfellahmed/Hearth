@@ -13,7 +13,7 @@ eq(c.autoPick(seen(125, 774), {}), {code: 774}, 'LG table order: 774 before 125'
 eq(c.autoPick(seen(398), {}), null, 'a colour key is not a Home code');
 eq(c.autoPick(seen(773), null), null, 'keybinds file unknown: nothing is written');
 eq(c.autoPick([], {}), null, 'nothing detected');
-const ours = {'773': {action: 'launch', id: 'com.elfellahmed.cleanhearth'}};
+const ours = {'773': {action: 'launch', id: 'tld.my.customlauncher'}};
 eq(c.autoPick(seen(774), ours), null, 'Hearth already has a button: no second one');
 const foreign = {'773': {action: 'launch', id: 'com.other.app'}};
 const p = c.autoPick(seen(773), foreign);
@@ -29,7 +29,7 @@ eq(codes('key id => 773\n'), [773], 'older "id =>" line still read');
 eq(codes('keyid=774, state=1\n'), [774], 'a keyid line without uinput_code still read');
 // Z5: the Home guard (recorder entries while the key mapper listens)
 {
-	const g = c.addGuard({'398': {action: 'exec', command: c.OPEN_COMMAND}, '774': {action: 'launch', id: 'com.elfellahmed.cleanhearth'}});
+	const g = c.addGuard({'398': {action: 'exec', command: c.OPEN_COMMAND}, '774': {action: 'launch', id: 'tld.my.customlauncher'}});
 	eq(g.codes, [773, 125], 'guard: only Home codes without an entry get a recorder');
 	eq(c.isGuardBind(g.binds['773']) && c.isGuardBind(g.binds['125']) && !c.isGuardBind(g.binds['774']), true, 'guard: recorder entries are recognised');
 	eq(Object.keys(c.stripGuard(g.binds)).sort(), ['398', '774'], 'guard: stripGuard leaves the other entries');

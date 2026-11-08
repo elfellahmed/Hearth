@@ -21,7 +21,7 @@ if [ -f "$PIDF" ] && kill -0 "$(cat "$PIDF" 2>/dev/null)" 2>/dev/null; then exit
 echo $$ > "$PIDF"
 up () { cut -d' ' -f1 /proc/uptime; }
 ls_ () { timeout 4 luna-send -n 1 "$@" 2>/dev/null; }
-NUDGE_ID=com.elfellahmed.cleanhearth.rescan
+NUDGE_ID=tld.my.customlauncher.rescan
 S=$(up)
 echo "start T=$S" > "$OUT"
 nudged=0; tries=0

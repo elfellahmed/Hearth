@@ -9,7 +9,7 @@ Something not right? Try the matching tip. If yours is not here, switch **Settin
 3. **On webOS 11** run this once over SSH:
 
 ```
-sh /media/developer/apps/usr/palm/applications/com.elfellahmed.cleanhearth/tools/webos11-permission.sh
+sh /media/developer/apps/usr/palm/applications/tld.my.customlauncher/tools/webos11-permission.sh
 ```
 
 Then close and reopen Hearth. After updating Hearth, restart the TV or run the line again.

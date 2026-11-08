@@ -25,7 +25,7 @@
 #        sh preload.sh status          one word per line: switched-off (if any), linked.
 
 DIR="${DIR:-/media/developer/launcher-preload}"
-LAUNCHER_ID="${LAUNCHER_ID:-com.elfellahmed.cleanhearth}"
+LAUNCHER_ID="${LAUNCHER_ID:-tld.my.customlauncher}"
 LAUNCHER="${LAUNCHER:-/media/developer/apps/usr/palm/applications/$LAUNCHER_ID}"
 LINK="${LINK:-/var/lib/webosbrew/init.d/50-launcher-preload}"
 OFF="${OFF:-$DIR/off.txt}"

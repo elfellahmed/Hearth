@@ -28,7 +28,7 @@ const added = run(t.removeInputCommand());
 eq(t.replyOk(added), true, 'the remove command prints the TV\'s reply');
 const calls = readFileSync(join(dir, 'calls'), 'utf8');
 eq(calls.includes('luna://com.webos.service.eim/deleteDevice'), true, 'it calls deleteDevice on the External Input Manager');
-eq(calls.includes('"appId":"com.elfellahmed.cleanhearth"'), true, 'with the launcher\'s app id');
+eq(calls.includes('"appId":"tld.my.customlauncher"'), true, 'with the launcher\'s app id');
 eq(calls.startsWith('-n 1 '), true, 'as a one-shot call');
 eq(calls.includes('"label":"CleanHearth"'), true, 'with the label the input was added under');
 eq(calls.includes('"pigImage":""'), true, 'and the pigImage field the TV needs');

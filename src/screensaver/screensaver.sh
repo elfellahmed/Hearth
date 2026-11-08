@@ -37,7 +37,7 @@
 
 DIR="${DIR:-/media/developer/launcher-screensaver}"
 APP="${APP:-/usr/palm/applications/com.webos.app.screensaver}"
-LAUNCHER_ID="${LAUNCHER_ID:-com.elfellahmed.cleanhearth}"
+LAUNCHER_ID="${LAUNCHER_ID:-tld.my.customlauncher}"
 LAUNCHER="${LAUNCHER:-/media/developer/apps/usr/palm/applications/$LAUNCHER_ID}"
 LINK="${LINK:-/var/lib/webosbrew/init.d/49-launcher-screensaver}"
 FLAG="${FLAG:-$DIR/enabled}"

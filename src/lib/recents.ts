@@ -8,7 +8,7 @@ export interface RecentApp {
 	title: string;
 }
 
-const SELF = 'com.elfellahmed.cleanhearth';
+const SELF = 'tld.my.customlauncher';
 const SKIP = [SELF, SYSTEM_APP.lgHome, 'com.tvweb.home'];
 const ID_RE = /^[A-Za-z0-9._-]+$/;
 

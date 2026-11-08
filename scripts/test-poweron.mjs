@@ -31,7 +31,7 @@ eq([table.micomPower, table.remoteKey].join(), 'youtube.leanback.v4,youtube.lean
 eq([table.netflix, table.amazon].join(), 'netflix,amazon', 'the Netflix and Prime Video buttons keep LG\'s own apps');
 eq(table.wakeOnWiFi === undefined && table.hdmiCec === undefined, true, 'network wake-ups and HDMI-CEC are not given an app (they go where they ask)');
 eq(JSON.stringify({...built, common: {...built.common, firstAppByPowerOnReason: JSON.parse(stock).common.firstAppByPowerOnReason}}), JSON.stringify(JSON.parse(stock)), 'everything else is LG\'s file unchanged');
-eq(h.overrideApp(h.buildOverride(stock, 'com.elfellahmed.cleanhearth')), 'com.elfellahmed.cleanhearth', 'the app can be read back out of the file');
+eq(h.overrideApp(h.buildOverride(stock, 'tld.my.customlauncher')), 'tld.my.customlauncher', 'the app can be read back out of the file');
 const net = JSON.parse(h.buildOverride(stock, 'youtube.leanback.v4', true)).common.firstAppByPowerOnReason;
 eq(net.wakeOnWiFi === 'youtube.leanback.v4' && net.wakeOnLan === 'youtube.leanback.v4', true, 'with the network choice both network keys are set, listed or not');
 eq(net.hdmiCec === undefined && net.netflix === 'netflix', true, 'HDMI-CEC and the partner buttons are still left alone');
@@ -119,20 +119,20 @@ eq(h.needsRestart(read()), true, 'until the restart the TV still has it loaded')
 // a change to another app while YouTube is in place, interrupted right after the new copy was moved: still Hearth's copy
 for (const step of h.writeSteps(guardSh, mine, 'youtube.leanback.v4')) sh(step.command);
 sh(h.finishCommand('youtube.leanback.v4'));
-const second = h.buildOverride(stock, 'com.elfellahmed.cleanhearth');
-for (const step of h.writeSteps(guardSh, second, 'com.elfellahmed.cleanhearth')) sh(step.command);
-const parts = h.finishCommand('com.elfellahmed.cleanhearth').split(' && ');
+const second = h.buildOverride(stock, 'tld.my.customlauncher');
+for (const step of h.writeSteps(guardSh, second, 'tld.my.customlauncher')) sh(step.command);
+const parts = h.finishCommand('tld.my.customlauncher').split(' && ');
 const cut = parts.findIndex((p) => p.indexOf("mv -f '" + h.OVERRIDE_FILE + ".hearth-new'") === 0);
 sh(parts.slice(0, cut + 1).join(' && '));
 eq(read().foreign, false, 'a change interrupted after the move: the copy is still recognised as Hearth\'s');
-eq(read().chosen, 'com.elfellahmed.cleanhearth', 'and names the new app');
+eq(read().chosen, 'tld.my.customlauncher', 'and names the new app');
 eq(readFileSync(root + '/dir/override.md5', 'utf8').trim().split('\n').length, 2, '(both sums are noted at that point)');
 eq(sh(h.REMOVE_COMMAND).trim(), 'removed', 'so it can still be switched off from Hearth');
 
 // a failed change leaves the earlier choice in place
 for (const step of h.writeSteps(guardSh, mine, 'youtube.leanback.v4')) sh(step.command);
 sh(h.finishCommand('youtube.leanback.v4'));
-for (const step of h.writeSteps(guardSh, second, 'com.elfellahmed.cleanhearth')) sh(step.command);
+for (const step of h.writeSteps(guardSh, second, 'tld.my.customlauncher')) sh(step.command);
 writeFileSync(root + '/dir/guard.sh.hearth-new', '#!/bin/sh\nif true; then\n');      // a half-written check
 sh(h.ABANDON_COMMAND);
 eq(read().chosen, 'youtube.leanback.v4', 'a change abandoned before the move keeps the earlier choice');

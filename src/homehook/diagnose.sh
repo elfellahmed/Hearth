@@ -24,12 +24,12 @@ sed 's#>/dev/null 2>&1$##' "$HOOK/watch.sh" > /tmp/launcher-selftest-watch.sh
 echo '{"returnValue":true,"appId":"com.webos.app.home","processId":"","windowId":""}' | NO_VERIFY=1 WATCH_STDIN=1 LUNA_SEND=/tmp/launcher-selftest-luna.sh LOG=/dev/null ALLOW=/tmp/launcher-selftest-allow sh /tmp/launcher-selftest-watch.sh 2>&1 || echo "(self-test failed)"
 rm -f /tmp/launcher-selftest-luna.sh /tmp/launcher-selftest-watch.sh
 echo "== has the launcher shown itself recently? (the launcher touches this file when it is on screen)"; ls -l /tmp/launcher-alive /tmp/launcher-launch-mark 2>&1
-echo "== is a launcher process running? (pgrep -f)"; pgrep -f com.elfellahmed.cleanhearth 2>&1 | head -5 || echo "none found"
+echo "== is a launcher process running? (pgrep -f)"; pgrep -f tld.my.customlauncher 2>&1 | head -5 || echo "none found"
 echo "== files in /tmp";                ls -l /tmp/launcher-* 2>&1
 echo "== stand-in still mounted over LG Home's QML? (should be 'no')"; grep " $APP_QML " /proc/mounts || echo "no"
 echo "== user asked for LG's own Home? (file exists = yes)"; ls -l /tmp/launcher-allow-stock-home 2>&1
 echo "== LG Home process(es)";        ps 2>&1 | grep -iE "[c]om.webos.app.(full)?home([^A-Za-z0-9._-]|$)"
-echo "== launcher installed?";        ls /media/developer/apps/usr/palm/applications/com.elfellahmed.cleanhearth 2>&1 | head -5
+echo "== launcher installed?";        ls /media/developer/apps/usr/palm/applications/tld.my.customlauncher 2>&1 | head -5
 echo "== which app the Home button opens (defaultApps.home; com.webos.app.fullhome on webOS 4.x)"
 luna-send -n 1 luna://com.webos.settingsservice/getSystemSettings '{"category":"general","keys":["defaultApps"]}' 2>&1
 echo "== app in front right now";     luna-send -n 1 luna://com.webos.applicationManager/getForegroundAppInfo '{}' 2>&1
