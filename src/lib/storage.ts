@@ -135,8 +135,6 @@ export const DEFAULTS_VERSION = 1;
 export type HomeLayout = 'dock' | 'list' | 'classic';
 export const HOME_LAYOUTS: readonly HomeLayout[] = ['dock', 'list', 'classic'];
 
-import type {Handoff, HomeButton, PendingStep} from './homehandoff';
-
 export interface UserConfig {
 	/** P41f: the defaults version these settings were last reset to (missing = never; the look is reset once) */
 	defaultsV: number;
@@ -167,12 +165,6 @@ export interface UserConfig {
 	homeApp: boolean;
 	/** the app that setting named before Hearth, put back when it is switched off ('' when not known) */
 	homeAppPrevious: string;
-	/** CleanHearth: who answers the Home button (see lib/homehandoff.ts) */
-	homeButton: HomeButton;
-	/** what CleanHearth switched off when Home went to Glasshouse, put back when it is taken back */
-	handoff: Handoff | null;
-	/** a hand-over step cut short by the app manager restarting, finished at the next start */
-	handoffPending: PendingStep;
 	/** how many LG preloaded apps are switched off (Settings -> System -> Memory); 0 = LG's own setting */
 	preloadOff: number;
 	/** P69 keep Hearth ready (experimental): 0 off, 1 keep alive, 2 + load again, 3 + memory list */
@@ -399,9 +391,6 @@ export const DEFAULT_CONFIG: UserConfig = {
 	showLabels: true,
 	minimal: false,
 	showLgHome: false,                // P41c: hidden on a fresh install (saved settings keep theirs)
-	homeButton: 'cleanhearth',
-	handoff: null,
-	handoffPending: '',
 	inputStatus: true,
 	showSystem: false,                // P41c: same
 	hideSettings: false,              // R10: additive, off
@@ -436,15 +425,7 @@ function ranged (value: unknown, name: RangeName): number {
 /** Fields left alone by the P41f reset: the user's own apps, order, names and favourites, and everything installed on the TV (helper, Home key, power-on app, saver, keep-ready, remote, debug). */
 const KEPT_ON_RESET: readonly (keyof UserConfig)[] = ['appIds', 'hiddenIds', 'sourceIds', 'tileOrder', 'favourites', 'sourceEdits', 'appEdits', 'closeHome', 'tvApps', 'showDebug', 'language', 'hideSettings',
 	'replaceHome', 'homeApp', 'homeAppPrevious', 'preloadOff', 'keepReady', 'keepRelaunch', 'takeoverHome', 'samHome', 'screensaver', 'screensaverSource', 'screensaverInterval', 'screensaverShuffle',
-	'screensaverCare', 'screensaverPowerOff', 'screensaverDim', 'screensaverDimLevel', 'screensaverFit', 'screensaverRecursive', 'powerOnApp', 'powerOnNetwork', 'remoteModel', 'remap', 'remapKept', 'homeButton', 'handoff', 'handoffPending', 'defaultsV'];
-
-/** A saved hand-over record, or null when it is missing or malformed. */
-function validHandoff (v: unknown): Handoff | null {
-	const h = v as {helper?: unknown; codes?: unknown} | null;
-	if (!h || typeof h !== 'object') return null;
-	const codes = h.codes instanceof Array ? (h.codes as unknown[]).filter((c): c is number => typeof c === 'number' && c > 0 && c < 100000) : [];
-	return {helper: h.helper === true, codes};
-}
+	'screensaverCare', 'screensaverPowerOff', 'screensaverDim', 'screensaverDimLevel', 'screensaverFit', 'screensaverRecursive', 'powerOnApp', 'powerOnNetwork', 'remoteModel', 'remap', 'remapKept', 'defaultsV'];
 
 /** P41f: the saved settings with every look, widget, wallpaper, home-row and quiet-mode value at its default. */
 export function withDefaultLook (c: UserConfig): UserConfig {
@@ -584,9 +565,6 @@ export function loadConfig (): UserConfig {
 			showLabels: parsed.showLabels !== false,
 			minimal: parsed.minimal === true,
 			showLgHome: parsed.showLgHome !== false,
-			homeButton: parsed.homeButton === 'glasshouse' ? 'glasshouse' : 'cleanhearth',
-			handoff: validHandoff(parsed.handoff),
-			handoffPending: parsed.handoffPending === 'restore' ? 'restore' : '',
 			inputStatus: parsed.inputStatus !== false,   // P41c: a saved setting without the field (updaters) reads as On; an explicit Off stays
 			showSystem: parsed.showSystem !== false,
 			hideSettings: parsed.hideSettings === true,

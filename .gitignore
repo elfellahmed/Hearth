@@ -16,3 +16,4 @@ public/languages/
 public/marks/*
 !public/marks/README.md
 .local/
+scripts/.cache-*

@@ -1,0 +1,67 @@
+# CleanHearth release: push a tag vX.Y.Z (matching public/appinfo.json's version) and this builds the .ipk, attaches it to
+# a GitHub release, and updates repo/apps.json (Homebrew Channel) and repo/updates.json (in-app Updates) on main.
+#
+#   git tag -a v1.0.1 -m "What changed|Another line" && git push origin v1.0.1
+#
+# The tag's message lines (separated by |) become the update notes.
+name: Release
+
+on:
+  push:
+    tags: ['v*']
+
+permissions:
+  contents: write
+
+concurrency:
+  group: release
+  cancel-in-progress: false
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+
+      - name: Check the tag matches the app version
+        run: |
+          V=$(node -p "require('./public/appinfo.json').version")
+          [ "v$V" = "$GITHUB_REF_NAME" ] || { echo "Tag $GITHUB_REF_NAME does not match public/appinfo.json version $V"; exit 1; }
+          echo "VERSION=$V" >> "$GITHUB_ENV"
+
+      - name: Install
+        run: |
+          npm ci
+          npm install --no-save --prefix /tmp/ast typescript@5   # the language scan in the tests needs TypeScript 5
+
+      - name: Test
+        run: npm test
+
+      - name: Build the .ipk
+        run: npm run package
+
+      - name: Publish the release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          NOTES=$(git tag -l --format='%(contents)' "$GITHUB_REF_NAME" | tr '\n' ' ' | sed 's/ *$//')
+          echo "NOTES=$NOTES" >> "$GITHUB_ENV"
+          gh release create "$GITHUB_REF_NAME" build/*.ipk --title "CleanHearth $VERSION" --notes "${NOTES:-CleanHearth $VERSION}" --verify-tag
+
+      - name: Update the Homebrew repository and the update list on main
+        run: |
+          git fetch origin main
+          git checkout main
+          node scripts/release-manifest.mjs --repo "$GITHUB_REPOSITORY" --notes "$NOTES"
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add repo/apps.json repo/updates.json
+          git commit -m "Release $VERSION: Homebrew repository and update list"
+          git push origin main

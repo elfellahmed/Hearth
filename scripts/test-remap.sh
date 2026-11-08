@@ -34,7 +34,7 @@ check "apply.sh is valid shell" "$(sh -n "$S/apply.sh" && echo ok)" "ok"
 check "on puts the filter in place" "$(run on)" "applied"
 check "Hearth's filter goes first, the TV's own follow unchanged" "$(cat "$T/list")" "[$entry,${STOCK#[}"
 check "the change is in memory only (volatile)" "$(grep -c '"volatile":true' "$T/sets")" "1"
-check "the map goes with it" "$(grep -c 'tld.my.customlauncher.remap":{"on":true' "$T/sets")" "1"
+check "the map goes with it" "$(grep -c 'com.elfellahmed.cleanhearth.remap":{"on":true' "$T/sets")" "1"
 check "configd's copies made by these calls are deleted, older ones kept" "$(ls "$T/snap" | tr '\n' ' ')" "configd_0_before_setConfigs.json configd_1_before_load.json "
 check "check does nothing when it is in place" "$(run check; sets)" "applied
 1"
@@ -46,13 +46,13 @@ check "reload takes it out and puts it in again" "$(run reload; tail -2 "$T/sets
 check "still once after reload" "$(grep -o hearthRemap "$T/list" | wc -l | tr -d ' ')" "1"
 "check" "" ""
 check "capture tells the filter, with the map" "$(run capture; tail -1 "$T/sets")" "applied
-{\"volatile\":true,\"configs\":{\"tld.my.customlauncher.remap\":{\"on\":true,\"keys\":{\"Key_webOS_Netflix\":{\"t\":\"app\",\"id\":\"com.example.app\"}},\"capture\":1}}}"
+{\"volatile\":true,\"configs\":{\"com.elfellahmed.cleanhearth.remap\":{\"on\":true,\"keys\":{\"Key_webOS_Netflix\":{\"t\":\"app\",\"id\":\"com.example.app\"}},\"capture\":1}}}"
 check "nocapture sends the plain map" "$(run nocapture; tail -1 "$T/sets" | grep -c capture)" "applied
 0"
 check "capture does not touch the chain" "$(tail -2 "$T/sets" | grep -c keyFilters)" "0"
 check "off takes it out" "$(run off)" "removed"
 check "and the TV's own list is back" "$(cat "$T/list")" "$STOCK"
-check "off sets both to null" "$(tail -1 "$T/sets" | grep -c 'keyFilters":null,"tld.my.customlauncher.remap":null')" "1"
+check "off sets both to null" "$(tail -1 "$T/sets" | grep -c 'keyFilters":null,"com.elfellahmed.cleanhearth.remap":null')" "1"
 check "check puts it back when the TV forgot it" "$(run check; grep -c hearthRemap "$T/list")" "applied
 1"
 run off >/dev/null

@@ -40,7 +40,7 @@
 DIR="${DIR:-/media/developer/launcher-takeover}"
 APP_DIR="${APP_DIR:-/usr/palm/applications/com.webos.app.home}"
 STAGE="${STAGE:-$DIR/stage}"
-LAUNCHER_ID="${LAUNCHER_ID:-tld.my.customlauncher}"
+LAUNCHER_ID="${LAUNCHER_ID:-com.elfellahmed.cleanhearth}"
 LAUNCHER="${LAUNCHER:-/media/developer/apps/usr/palm/applications/$LAUNCHER_ID}"
 LINK="${LINK:-/var/lib/webosbrew/init.d/47-launcher-takeover}"
 FLAG="${FLAG:-$DIR/enabled}"
@@ -70,7 +70,7 @@ ALIVE="${ALIVE_FILE:-/tmp/launcher-alive}"             # Hearth touches this whe
 MARK="${MARK_FILE:-/tmp/launcher-takeover-mark}"       # touched when Hearth is asked for: it must touch ALIVE after that
 KEEP_LOG="${KEEP_LOG:-/media/developer/launcher-takeover-last.log}"   # a copy of the log that survives a restart
 LG_HOME=com.webos.app.home
-NUDGE_ID=tld.my.customlauncher.rescan    # not an app: blocking it blocks nothing
+NUDGE_ID=com.elfellahmed.cleanhearth.rescan    # not an app: blocking it blocks nothing
 
 log () { echo "$(date '+%H:%M:%S') takeover: $*" >> "$LOG"; }
 # /tmp is gone after a restart; a copy is kept at the moments that matter, so a bad start can be read afterwards

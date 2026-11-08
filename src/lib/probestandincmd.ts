@@ -7,7 +7,7 @@
 
 export const DIR = '/media/developer/launcher-standin';
 export const HOME_DIR = '/usr/palm/applications/com.webos.app.home';
-export const HEARTH_DIR = '/media/developer/apps/usr/palm/applications/tld.my.customlauncher';
+export const HEARTH_DIR = '/media/developer/apps/usr/palm/applications/com.elfellahmed.cleanhearth';
 export const LOG = '/tmp/launcher-standin.log';
 export const AUTO_UNDO_SECONDS = 1200;
 

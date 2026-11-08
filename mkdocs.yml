@@ -1,8 +1,8 @@
-site_name: Hearth for WebOS
-site_description: A fast, calm home screen for LG webOS TVs
-site_url: https://rudra-avatar.github.io/Hearth/
-repo_url: https://github.com/rudra-avatar/Hearth
-repo_name: rudra-avatar/Hearth
+site_name: CleanHearth
+site_description: A quiet home screen for rooted LG webOS TVs
+site_url: https://github.com/elfellahmed/Hearth
+repo_url: https://github.com/elfellahmed/Hearth
+repo_name: elfellahmed/Hearth
 docs_dir: docs
 exclude_docs: |
   theme/theme_name/

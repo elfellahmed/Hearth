@@ -12,7 +12,7 @@ const h = await import(out);
 let fail = 0;
 const eq = (a, b, m) => { const ok = JSON.stringify(a) === JSON.stringify(b); if (!ok) fail++; console.log(ok ? 'ok  ' : 'FAIL', m, ok ? '' : `(${JSON.stringify(a)} != ${JSON.stringify(b)})`); };
 
-const sample = 'start T=31.2\nT=31.9 sam=unknown cfg=no fg=none sys=starting nudge=-\nT=36.0 sam=native cfg=no fg=none sys=starting nudge=-\nT=38.1 sam=native cfg=ok fg=none sys=starting nudge=fail\nT=41.3 sam=native cfg=ok fg=com.webos.app.home sys=starting nudge=ok\nT=60.0 sam=native cfg=ok fg=tld.my.customlauncher sys=running nudge=-\nend T=131.4\n';
+const sample = 'start T=31.2\nT=31.9 sam=unknown cfg=no fg=none sys=starting nudge=-\nT=36.0 sam=native cfg=no fg=none sys=starting nudge=-\nT=38.1 sam=native cfg=ok fg=none sys=starting nudge=fail\nT=41.3 sam=native cfg=ok fg=com.webos.app.home sys=starting nudge=ok\nT=60.0 sam=native cfg=ok fg=com.elfellahmed.cleanhearth sys=running nudge=-\nend T=131.4\n';
 const t = h.summariseTimeline(sample);
 eq([t.startUp, t.sam, t.cfg, t.nudge, t.fg, t.home, t.running, t.rounds, t.end], [31.2, 36, 38.1, 41.3, 41.3, 41.3, 60, 5, 131.4], 'timeline: first seconds, rounds, end');
 eq(t.fgId, 'com.webos.app.home', 'timeline: first app in front');

@@ -20,7 +20,7 @@ that setting changes, without a restart.
   TV's own filters, exactly as before. It never takes the arrows, OK, Back, Exit, Home, power, volume, mute,
   channels or the number keys (hold a number = LG's Quick Access), so the remote always works to get out of a
   bad map. It costs one object lookup per key press: no timer, no polling, no extra process.
-- The map is the config `tld.my.customlauncher.remap`, which the filter **subscribes** to: a change in Hearth applies
+- The map is the config `com.elfellahmed.cleanhearth.remap`, which the filter **subscribes** to: a change in Hearth applies
   at once.
 - `apply.sh`: puts the filter in the chain and hands it the map (`map.json`), or takes both out. Both are set with
   configd's `setConfigs` and **`"volatile": true`**, so they live in memory only: nothing on the TV's storage is

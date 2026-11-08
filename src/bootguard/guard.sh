@@ -19,7 +19,7 @@ DIR="${DIR:-/media/developer/launcher-bootguard}"
 STATE="${STATE:-$DIR/state}"
 LINK="${LINK:-/var/lib/webosbrew/init.d/44-launcher-bootguard}"
 LOG="${LOG:-/tmp/launcher-bootguard.log}"
-APP_ID="${APP_ID:-tld.my.customlauncher}"
+APP_ID="${APP_ID:-com.elfellahmed.cleanhearth}"
 RETRY_BOOTS="${RETRY_BOOTS:-2}"
 NAP="${NAP:-sleep}"
 PO_DIR="${PO_DIR:-/media/developer/launcher-poweron}"
@@ -88,7 +88,7 @@ revert () { # input powerOn
 # lines of bootd.log about the first app (the pattern asked for in issue 23), the last 30, cut to 200 characters
 bootd_excerpt () {
     [ -f "$BOOTD_LOG" ] || { tr_line "bootd.log: not there"; return 0; }
-    grep -i -E 'lastinput|firstapp|mvpd|coverui|customlauncher|webappmanager|powerstatus|snapshot' "$BOOTD_LOG" 2>/dev/null | tail -n 30 | cut -c1-200 | while IFS= read -r l; do tr_line "bootd: $l"; done
+    grep -i -E 'lastinput|firstapp|mvpd|coverui|customlauncher|cleanhearth|webappmanager|powerstatus|snapshot' "$BOOTD_LOG" 2>/dev/null | tail -n 30 | cut -c1-200 | while IFS= read -r l; do tr_line "bootd: $l"; done
 }
 
 trace () { # tries

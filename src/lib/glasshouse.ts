@@ -1,34 +1,14 @@
-// CleanHearth: who answers the remote's Home button, CleanHearth or Glasshouse Home.
-//
-// Glasshouse (github.com/rorygallagher2024/glasshouse) runs a small server on a rooted TV. Its "Glasshouse Home" takes
-// LG Home's place, and its local API switches that on and off: POST /api/home/enable and /api/home/disable, answered
-// only for requests from the TV itself (127.0.0.1), with a JSON body. We reach it through the Homebrew Channel's root
-// shell (curl or wget), so the web page needs no cross-origin access.
-//
-// Handing Home to Glasshouse: CleanHearth's own ways of taking Home (the helper script and the Home button mapping) are
-// switched off first, and remembered, then Glasshouse Home is switched on. Taking it back: Glasshouse Home is switched off,
-// then the remembered helper and mapping are put back. On webOS 5 and 6 switching Glasshouse Home restarts the TV's app
-// manager, which can close this page halfway; the step that is left is saved first and finished at the next start.
+// CleanHearth always answers the Home button. Glasshouse (github.com/rorygallagher2024/glasshouse) can stay on the TV for
+// everything else, but its "Glasshouse Home" would take LG Home's place and compete for the Home button. This reads whether
+// it is on and switches it off through Glasshouse's local API: GET /api/home and POST /api/home/disable, answered only for
+// requests from the TV itself (127.0.0.1), with a JSON body. We reach it through the Homebrew Channel's root shell (curl or
+// wget), so the web page needs no cross-origin access. On webOS 5 and 6 switching it restarts the TV's app manager.
 
 import {exec} from './apps';
 import {td} from '../i18n';
 
 /** Where Glasshouse keeps its settings on the TV (its "port" is read from there; 8080 when not set). */
 export const GLASSHOUSE_CONFIG = '/var/lib/tvweb/config.json';
-
-export type HomeButton = 'cleanhearth' | 'glasshouse';
-export const HOME_BUTTONS: readonly HomeButton[] = ['cleanhearth', 'glasshouse'];
-
-/** What CleanHearth had switched on before Home was handed to Glasshouse, to be put back when it is taken back. */
-export interface Handoff {
-	/** the "Replace LG Home with a helper script" watcher was running */
-	helper: boolean;
-	/** remote buttons that opened CleanHearth (Input Hook mapping) */
-	codes: number[];
-}
-
-/** A step that was cut short (the app manager restarted under the page): finished at the next start. */
-export type PendingStep = '' | 'restore';
 
 export interface GlasshouseState {
 	/** Glasshouse answered on this TV */
@@ -69,16 +49,16 @@ export function parseStatus (out: string): GlasshouseState {
 export function parseSwitch (out: string): string {
 	let j: {ok?: unknown; error?: unknown} | null = null;
 	try { j = JSON.parse(out); } catch { j = null; }
-	if (!j || typeof j !== 'object') return td('handoff.noAnswer');
+	if (!j || typeof j !== 'object') return td('glasshouse.noAnswer');
 	if (j.ok === true) return '';
-	return typeof j.error === 'string' && j.error ? j.error : td('handoff.refused');
+	return typeof j.error === 'string' && j.error ? j.error : td('glasshouse.refused');
 }
 
 export function glasshouseStatus (): Promise<GlasshouseState> {
 	return exec(statusCommand(), 12000).then(parseStatus, () => ({found: false, enabled: false, supported: false}));
 }
 
-/** Switches Glasshouse Home on or off. Resolves '' when it worked, else why not. */
+/** Switches Glasshouse Home on or off (CleanHearth only ever switches it off). Resolves '' when it worked, else why not. */
 export function setGlasshouseHome (on: boolean): Promise<string> {
-	return exec(switchCommand(on), 50000).then(parseSwitch, (e: Error) => (e && e.message) || td('handoff.commandFailed'));
+	return exec(switchCommand(on), 50000).then(parseSwitch, (e: Error) => (e && e.message) || td('glasshouse.commandFailed'));
 }

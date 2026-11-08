@@ -8,9 +8,9 @@ check () { if [ "$2" = "$3" ]; then echo "ok   $1"; else echo "FAIL $1 (got '$2'
 # the command lines exactly as the guide shows them (a line starting with sh /media/... or rm -f /var/... or rm -f /home/...)
 lines () { grep -E '^ *(sh /media/developer/launcher-remap/apply\.sh off|rm -f /(var|home)/)' "$1" | sed 's/^ *//'; }
 lines "$D/docs/troubleshooting.md" > "$T/guide.txt"
-lines "$D/README.md" > "$T/readme.txt"
+lines "$D/docs/HEARTH-README.md" > "$T/readme.txt"     # CleanHearth: Hearth's README moved to docs/
 check "the guide shows 4 command lines" "$(wc -l < "$T/guide.txt" | tr -d ' ')" "4"
-check "README shows the same lines as the guide" "$(cmp -s "$T/guide.txt" "$T/readme.txt" && echo same)" "same"
+check "Hearth's README shows the same lines as the guide" "$(cmp -s "$T/guide.txt" "$T/readme.txt" && echo same)" "same"
 
 # the fake TV
 mkdir -p "$T/media/developer/launcher-remap" "$T/var/lib/webosbrew/init.d" "$T/home/root/.config/lginputhook" "$T/bin"
@@ -30,7 +30,7 @@ head -2 "$T/guide.txt" > "$T/step2.txt"; tail -2 "$T/guide.txt" > "$T/step3.txt"
 # the fake can't use the default REMAP path in apply.sh, but 'off' needs only luna-send; run the first line from the copy
 out="$(run "$T/step2.txt" 2>&1)"
 check "step 2 first line prints removed" "$(printf '%s' "$out" | head -1)" "removed"
-check "it sends null for the filter list and the map, in memory only" "$(grep -c 'keyFilters":null.*tld.my.customlauncher.remap":null' "$T/sets")" "1"
+check "it sends null for the filter list and the map, in memory only" "$(grep -c 'keyFilters":null.*com.elfellahmed.cleanhearth.remap":null' "$T/sets")" "1"
 check "volatile" "$(grep -c '"volatile":true' "$T/sets")" "1"
 check "step 2 removes the 47, 48 and 49 links" "$(ls "$T/var/lib/webosbrew/init.d" | tr '\n' ' ')" "50-other inputhook "
 check "step 2 leaves the Input Hook app's settings" "$(ls "$T/home/root/.config/lginputhook")" "keybinds.json"

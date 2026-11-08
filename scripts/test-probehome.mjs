@@ -30,7 +30,7 @@ execSync(`mkdir -p ${hp}`);
 writeFileSync(join(dir, 'probe.sh'), h.HOME_PROBE_SH);
 const env = `KEYS=${keys} HP_DIR=${hp} HP_NOAUTO=1`;
 const sh = (a) => execSync(`${env} sh ${join(dir, 'probe.sh')} ${a}`).toString();
-const orig = {'773': {action: 'launch', id: 'tld.my.customlauncher'}, '400': {action: 'ignore'}};
+const orig = {'773': {action: 'launch', id: 'com.elfellahmed.cleanhearth'}, '400': {action: 'ignore'}};
 writeFileSync(keys, JSON.stringify(orig));
 let o = sh('start');
 eq(/started=1/.test(o) && /code=773/.test(o), true, 'script: start reports started and the code');

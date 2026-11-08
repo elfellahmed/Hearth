@@ -1,7 +1,7 @@
 const __glob = () => ({});
 
 // src/config/version.ts
-var HEARTH_VERSION = "3.0.0";
+var HEARTH_VERSION = "1.0.0";
 
 // src/config/catalog.ts
 var BASE_CATALOG = [
@@ -191,28 +191,25 @@ var en = {
   "pref.iconColor.desc": "The colour of the icon shapes: the theme's own, or a plain colour.",
   "pref.rows.label": "Rows of apps",
   "pref.rows.desc": "Show the apps in one row or two.",
-  "pref.homeButton.label": "Home button opens",
-  "pref.homeButton.desc": "CleanHearth, or Glasshouse Home (needs Glasshouse on this TV). Switching turns the other one's Home takeover off.",
-  "pref.homeButton.cleanhearth": "CleanHearth",
-  "pref.homeButton.glasshouse": "Glasshouse Home",
-  "handoff.toGlasshouseTitle": "Give the Home button to Glasshouse Home?",
-  "handoff.toGlasshouseText": "CleanHearth stops taking over Home (its helper script and Home button mapping are switched off and remembered), then Glasshouse Home is switched on. On webOS 5 and 6 this restarts the TV's app manager, which closes the apps that are open. CleanHearth stays in Glasshouse Home's Apps row.",
-  "handoff.toCleanHearthTitle": "Give the Home button back to CleanHearth?",
-  "handoff.toCleanHearthText": "Glasshouse Home is switched off (LG Home gets its place back), then CleanHearth's helper and Home button mapping are put back as they were. On webOS 5 and 6 the TV's app manager restarts; if CleanHearth closes, it finishes the rest the next time it opens.",
-  "disabled.glasshouseHome": "Glasshouse Home has the Home button now. Set Home button opens to CleanHearth first.",
-  "handoff.noAnswer": "no answer from Glasshouse",
-  "handoff.refused": "Glasshouse refused",
-  "handoff.commandFailed": "the command failed",
-  "handoff.go": "Switch",
-  "handoff.cancel": "Keep it as it is",
-  "handoff.working": "Handing over the Home button\u2026",
-  "handoff.noGlasshouse": "Glasshouse did not answer on this TV. Install or start Glasshouse first.",
-  "handoff.unsupported": "Glasshouse says this TV cannot have Glasshouse Home.",
-  "handoff.turnOffFirst": "Turn off {v1} first (Settings, System, TV start): CleanHearth only hands over its helper script and Home button mapping.",
-  "handoff.toGlasshouseDone": "The Home button now opens Glasshouse Home.",
-  "handoff.toCleanHearthDone": "The Home button opens CleanHearth again.",
-  "handoff.failed": "Could not switch: {why}",
-  "handoff.partly": "Glasshouse Home is off, but putting back CleanHearth's Home takeover failed: {why}. Set it again under Remote control and TV start.",
+  "pref.glasshouseHome.label": "Glasshouse Home",
+  "pref.glasshouseHome.desc": "Glasshouse can stay on this TV, but its own Home screen must stay off: it would take the Home button from CleanHearth.",
+  "pref.glasshouseHome.checking": "Checking\u2026",
+  "pref.glasshouseHome.none": "Glasshouse not found",
+  "pref.glasshouseHome.on": "On: switch it off",
+  "pref.glasshouseHome.off": "Off",
+  "glasshouse.offTitle": "Switch Glasshouse Home off?",
+  "glasshouse.offText": "Glasshouse keeps running; only its Home screen goes, and LG Home gets its place back, so CleanHearth answers the Home button again. On webOS 5 and 6 this restarts the TV's app manager, which closes the apps that are open (CleanHearth too, for a moment).",
+  "glasshouse.offGo": "Switch it off",
+  "glasshouse.keep": "Keep it",
+  "glasshouse.working": "Switching Glasshouse Home off\u2026",
+  "glasshouse.done": "Glasshouse Home is off. The Home button is CleanHearth's.",
+  "glasshouse.failed": "Glasshouse Home could not be switched off: {why}",
+  "glasshouse.alreadyOff": "Glasshouse Home is already off.",
+  "glasshouse.notFound": "Glasshouse did not answer on this TV.",
+  "glasshouse.isOnToast": "Glasshouse Home is on and takes the Home button. Switch it off in Settings, System, Remote control.",
+  "glasshouse.noAnswer": "no answer from Glasshouse",
+  "glasshouse.refused": "Glasshouse refused",
+  "glasshouse.commandFailed": "the command failed",
   "pref.homeLayout.label": "Home screen",
   "pref.homeLayout.desc": "Dock: the apps on a glass bar. List: large app names on the left. Classic: the row of icons.",
   "pref.homeLayout.dock": "Dock",
@@ -435,7 +432,7 @@ var en = {
   "disabled.keepList": "This TV has no memory list that Keep CleanHearth ready can change, so it cannot work here.",
   "disabled.noUpdate": "This TV has no LG updater file to block.",
   "disabled.lgLogo": "This TV doesn't have a setting for the LG logo at start.",
-  "disabled.rootDenied": 'the TV refused the command. If this TV is rooted, updating the Homebrew Channel may help. On webOS 11, run once over SSH: sh /media/developer/apps/usr/palm/applications/tld.my.customlauncher/tools/webos11-permission.sh (see "webOS 11" in the README).',
+  "disabled.rootDenied": 'the TV refused the command. If this TV is rooted, updating the Homebrew Channel may help. On webOS 11, run once over SSH: sh /media/developer/apps/usr/palm/applications/com.elfellahmed.cleanhearth/tools/webos11-permission.sh (see "webOS 11" in the README).',
   "disabled.rootDown": "the Homebrew Channel service is not running. If this TV is rooted, open the Homebrew Channel once, then reopen Settings.",
   "disabled.needsRoot": "Needs a rooted TV: {why}",
   "disabled.tvSaid": " (TV said: {detail})",
@@ -502,7 +499,7 @@ var en = {
   "app.howToGetRoot": "How to get root access back",
   "app.close": "Close",
   "app.getRootAccessBack": "Get root access back",
-  "app.firstRunOnceOver": 'First run once over SSH: sh /media/developer/apps/usr/palm/applications/tld.my.customlauncher/tools/webos11-permission.sh, then restart the TV. Only if that does not help, update the Homebrew Channel to 0.8.0-rc1 and open it once. Details: README, "webOS 11" and Troubleshooting.',
+  "app.firstRunOnceOver": 'First run once over SSH: sh /media/developer/apps/usr/palm/applications/com.elfellahmed.cleanhearth/tools/webos11-permission.sh, then restart the TV. Only if that does not help, update the Homebrew Channel to 0.8.0-rc1 and open it once. Details: README, "webOS 11" and Troubleshooting.',
   "app.ok2": "OK",
   "app.saving": "Saving...",
   "app.restartingTheTv": "Restarting the TV...",
@@ -2373,9 +2370,6 @@ var DEFAULT_CONFIG = {
   minimal: false,
   showLgHome: false,
   // P41c: hidden on a fresh install (saved settings keep theirs)
-  homeButton: "cleanhearth",
-  handoff: null,
-  handoffPending: "",
   inputStatus: true,
   showSystem: false,
   // P41c: same
@@ -2441,17 +2435,8 @@ var KEPT_ON_RESET = [
   "remoteModel",
   "remap",
   "remapKept",
-  "homeButton",
-  "handoff",
-  "handoffPending",
   "defaultsV"
 ];
-function validHandoff(v) {
-  const h = v;
-  if (!h || typeof h !== "object") return null;
-  const codes = h.codes instanceof Array ? h.codes.filter((c) => typeof c === "number" && c > 0 && c < 1e5) : [];
-  return { helper: h.helper === true, codes };
-}
 function withDefaultLook(c) {
   const out = { ...DEFAULT_CONFIG, clock: { ...DEFAULT_CLOCK }, weather: { ...DEFAULT_WEATHER }, wallpaper: { ...DEFAULT_WALLPAPER } };
   const old = c;
@@ -2562,9 +2547,6 @@ function loadConfig() {
       showLabels: parsed.showLabels !== false,
       minimal: parsed.minimal === true,
       showLgHome: parsed.showLgHome !== false,
-      homeButton: parsed.homeButton === "glasshouse" ? "glasshouse" : "cleanhearth",
-      handoff: validHandoff(parsed.handoff),
-      handoffPending: parsed.handoffPending === "restore" ? "restore" : "",
       inputStatus: parsed.inputStatus !== false,
       // P41c: a saved setting without the field (updaters) reads as On; an explicit Off stays
       showSystem: parsed.showSystem !== false,

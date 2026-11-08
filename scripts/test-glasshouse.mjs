@@ -1,4 +1,4 @@
-// Tests for the Home button hand-over to Glasshouse Home (src/lib/homehandoff.ts): the answers are read right, and the real
+// Tests for the Glasshouse Home check (src/lib/glasshouse.ts): the answers are read right, and the real
 // shell commands reach a look-alike Glasshouse server with the right method, path and Content-Type.   Run: npm test
 import {build} from 'esbuild';
 import {createServer} from 'http';
@@ -6,8 +6,8 @@ import {mkdtempSync, writeFileSync} from 'fs';
 import {tmpdir} from 'os';
 import {join} from 'path';
 
-const out = new URL('../node_modules/.cache-homehandoff-test.mjs', import.meta.url).pathname;
-await build({entryPoints: [new URL('../src/lib/homehandoff.ts', import.meta.url).pathname], bundle: true, format: 'esm', outfile: out, platform: 'node', logLevel: 'error',
+const out = new URL('../node_modules/.cache-glasshouse-test.mjs', import.meta.url).pathname;
+await build({entryPoints: [new URL('../src/lib/glasshouse.ts', import.meta.url).pathname], bundle: true, format: 'esm', outfile: out, platform: 'node', logLevel: 'error',
   plugins: [{name: 'stub', setup(b) { b.onResolve({filter: /\.\/apps$/}, (a) => ({path: a.path, namespace: 'stub'})); b.onLoad({filter: /.*/, namespace: 'stub'}, () => ({contents: 'export const exec = () => Promise.resolve("");', loader: 'js'})); }}]});
 const h = await import(out);
 
@@ -58,19 +58,19 @@ server.close();
 // ---- Settings: the row, and the rows it greys out ----
 const store = {};
 globalThis.localStorage = {getItem: (k) => (k in store ? store[k] : null), setItem: (k, v) => { store[k] = String(v); }, removeItem: (k) => { delete store[k]; }};
-const pOut = new URL('../node_modules/.cache-homehandoff-prefs.mjs', import.meta.url).pathname;
+const pOut = new URL('../node_modules/.cache-glasshouse-prefs.mjs', import.meta.url).pathname;
 await build({entryPoints: [new URL('../src/lib/prefs.ts', import.meta.url).pathname], bundle: true, format: 'esm', outfile: pOut, platform: 'node', logLevel: 'error', plugins: [{name: 'stub-apps', setup(b) { b.onResolve({filter: /\.\/apps$/}, () => ({path: 'apps-stub', namespace: 'stub'})); b.onLoad({filter: /.*/, namespace: 'stub'}, () => ({contents: 'export const exec = () => Promise.resolve(""); export const shellQuote = (v) => v;', loader: 'js'})); }}]});
 const p = await import(pOut);
-const sOut = new URL('../node_modules/.cache-homehandoff-storage.mjs', import.meta.url).pathname;
+const sOut = new URL('../node_modules/.cache-glasshouse-storage.mjs', import.meta.url).pathname;
 await build({entryPoints: [new URL('../src/lib/storage.ts', import.meta.url).pathname], bundle: true, format: 'esm', outfile: sOut, platform: 'node', logLevel: 'error', plugins: [{name: 'stub-apps', setup(b) { b.onResolve({filter: /\.\/apps$/}, () => ({path: 'apps-stub', namespace: 'stub'})); b.onLoad({filter: /.*/, namespace: 'stub'}, () => ({contents: 'export const exec = () => Promise.resolve(""); export const shellQuote = (v) => v;', loader: 'js'})); }}]});
 const s = await import(sOut);
 const c0 = s.DEFAULT_CONFIG;
-eq(c0.homeButton, 'cleanhearth', 'a fresh install: Home opens CleanHearth');
-const row = (c) => p.optionsFor('system', c, {homeHook: null, homeApp: null, root: 'yes'}).find((o) => o.id === 'homeButton');
-eq(row(c0) && row(c0).valueText, 'CleanHearth', 'System lists Home button opens: CleanHearth');
-eq(row({...c0, homeButton: 'glasshouse'}).valueText, 'Glasshouse Home', 'and Glasshouse Home once handed over');
-const gh = {...c0, homeButton: 'glasshouse'};
-eq(['replaceHome', 'samHome', 'homeApp', 'homeKey'].map((id) => !!p.disabledReason(id, {homeHook: null, homeApp: null}, gh)), [true, true, true, true], 'while Glasshouse has Home, CleanHearth\'s own takeover rows are greyed out');
-eq(p.disabledReason('replaceHome', {homeHook: null, homeApp: null}, c0), null, 'and usable again when CleanHearth has it');
+eq(c0.homeButton, undefined, 'no Home button choice any more: CleanHearth always has Home');
+const row = (info) => p.optionsFor('system', c0, {homeHook: null, homeApp: null, root: 'yes', ...info}).find((o) => o.id === 'glasshouseHome');
+eq(row({}).valueText, 'Checking…', 'the Glasshouse Home row reads Checking while unknown');
+eq(row({glasshouse: null}).valueText, 'Glasshouse not found', 'no Glasshouse on the TV');
+eq(row({glasshouse: {found: true, enabled: true, supported: true}}).valueText, 'On: switch it off', 'Glasshouse Home on: the row offers to switch it off');
+eq(row({glasshouse: {found: true, enabled: false, supported: true}}).valueText, 'Off', 'and Off once it is off');
+eq(p.ROOT_OPTIONS.indexOf('glasshouseHome') !== -1, true, 'the row needs root (it runs curl as root)');
 
 process.exit(fail ? 1 : 0);

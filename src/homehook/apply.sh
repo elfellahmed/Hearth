@@ -6,7 +6,7 @@
 
 APP_QML="${APP_QML:-/usr/palm/applications/com.webos.app.home/qml}"
 HOOK="${HOOK:-/media/developer/launcher-homehook}"
-LAUNCHER="${LAUNCHER:-/media/developer/apps/usr/palm/applications/tld.my.customlauncher}"
+LAUNCHER="${LAUNCHER:-/media/developer/apps/usr/palm/applications/com.elfellahmed.cleanhearth}"
 PIDFILE="${PIDFILE:-/tmp/launcher-homehook-watch.pid}"
 LOG="${LOG:-/tmp/launcher-homehook.log}"
 LINK="${LINK:-/var/lib/webosbrew/init.d/48-launcher-homehook}"
